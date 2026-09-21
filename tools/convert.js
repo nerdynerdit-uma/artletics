@@ -758,6 +758,17 @@ function convertPage(file, knownSlugs, warnings) {
 }
 
 // --- shell ------------------------------------------------------------------------
+
+// Stylesheets and scripts are served with a year-long immutable cache, so their address
+// has to change when their contents do. Without this, visitors who have been on the site
+// before keep the old CSS until the cache expires.
+function asset(file) {
+    const stamp = fs.existsSync(file)
+        ? require('crypto').createHash('md5').update(fs.readFileSync(file)).digest('hex').slice(0, 8)
+        : '0';
+    return `/${file}?v=${stamp}`;
+}
+
 // Takes out links to pages the replica does not have, along with the line break that
 // separated them from the link above in a footer list
 function dropRemovedLinks(html) {
@@ -780,7 +791,7 @@ function renderPage({ slug, title, description, body, footer, headerTheme }, nav
         : fallbackFooter);
     // Only the page with the form loads the form's script
     const formScript = body.includes('id="contactForm"')
-        ? '\n<script src="/assets/js/contact.js" defer></script>'
+        ? `\n<script src="${asset('assets/js/contact.js')}" defer></script>`
         : '';
     return `<!DOCTYPE html>
 <html lang="nl">
@@ -790,9 +801,9 @@ function renderPage({ slug, title, description, body, footer, headerTheme }, nav
 <title>${title}</title>
 <meta name="description" content="${description.replace(/"/g, '&quot;')}">
 <link rel="icon" href="/assets/images/5f1b031b-favicon.webp" type="image/webp">
-<link rel="stylesheet" href="/assets/css/base.css">
-<link rel="stylesheet" href="/assets/css/pages/${slug}.css">
-<link rel="stylesheet" href="/assets/css/overrides.css">
+<link rel="stylesheet" href="${asset('assets/css/base.css')}">
+<link rel="stylesheet" href="${asset(`assets/css/pages/${slug}.css`)}">
+<link rel="stylesheet" href="${asset('assets/css/overrides.css')}">
 </head>
 <body>
 ${nav}
@@ -800,7 +811,7 @@ ${nav}
 ${body}
 </main>
 ${footerHtml}
-<script src="/assets/js/site.js" defer></script>${formScript}
+<script src="${asset('assets/js/site.js')}" defer></script>${formScript}
 </body>
 </html>
 `;
