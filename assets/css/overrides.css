@@ -1,0 +1,80 @@
+/* Hand adjustments on top of the replica, loaded after the generated page CSS.
+   tools/convert.js never writes this file, so changes here survive a rebuild.
+   Each rule notes where it departs from the original site. */
+
+/* Homepage: "Het programma is bedacht..." and "In een samenleving...", one size bigger
+   than the original (about 15%). Original: calc(1rem + 0.5972vw) desktop, 21.1px mobile. */
+@media (min-width: 768px) {
+    .fe-block-yui_3_17_2_1_1756538813343_4728 .block-text p {
+        font-size: calc(1.15rem + 0.6868vw);
+    }
+}
+
+@media (max-width: 767px) {
+    .fe-block-yui_3_17_2_1_1756538813343_4728 .block-text p {
+        font-size: 24.3px;
+    }
+}
+
+/* Over Ons: the coloured intro ("ARTletics brengt KUNST, CULTUUR en SPORT samen..."),
+   one size bigger. Original: calc(1rem + 0.9583vw) desktop, 24.1px mobile. */
+@media (min-width: 768px) {
+    .fe-block-c4a27ec2ac7914b7d659 .block-text h3 {
+        font-size: calc(1.15rem + 1.1020vw);
+    }
+}
+
+@media (max-width: 767px) {
+    .fe-block-c4a27ec2ac7914b7d659 .block-text h3 {
+        font-size: 27.7px;
+    }
+}
+
+/* Over Ons: "als Sociale Partner in Artletics", one size bigger.
+   Original: calc(1rem + 0.9583vw) desktop, 24.1px mobile. */
+@media (min-width: 768px) {
+    .fe-block-42ac906f36e90f5223e2 .block-text h3 {
+        font-size: calc(1.15rem + 1.1020vw);
+    }
+}
+
+@media (max-width: 767px) {
+    .fe-block-42ac906f36e90f5223e2 .block-text h3 {
+        font-size: 27.7px;
+    }
+}
+
+/* Over Ons: the Project G.O.A.L.S. paragraph (top right) and Wenona's biography,
+   one size bigger (16px on the original) */
+.fe-block-e2c0c64392c5993cbca7 .block-text p,
+.fe-block-9323d0aec7fd0b82d95c .block-text p {
+    font-size: 18.4px;
+}
+
+/* Voetbal, Dychairo Deekman: the two lower paragraphs are 16px on the original; here
+   they match the opening paragraph above the video instead. This makes the section
+   taller than the original. */
+@media (min-width: 768px) {
+    .fe-block-807364c966cf9516981f .block-text .tx-11,
+    .fe-block-807364c966cf9516981f .block-text .tx-12 {
+        font-size: calc(1rem + 0.5972vw);
+        line-height: 1.302;
+        letter-spacing: -0.0130em;
+    }
+}
+
+@media (max-width: 767px) {
+    .fe-block-807364c966cf9516981f .block-text .tx-11,
+    .fe-block-807364c966cf9516981f .block-text .tx-12 {
+        font-size: 21.1px;
+        line-height: 1.298;
+        letter-spacing: -0.0152em;
+    }
+}
+
+/* Klachten: the procedure text and its bullets, one size bigger than the original
+   (16px there, about 15% up here) */
+.fe-block-822a2fd163f0c4341b58 .block-text p,
+.fe-block-822a2fd163f0c4341b58 .block-text li {
+    font-size: 18.4px;
+}

@@ -1,0 +1,16 @@
+{
+  "name": "artletics-tools",
+  "private": true,
+  "description": "Tooling only. The website itself is plain static HTML/CSS with no build step.",
+  "scripts": {
+    "shots": "node tools/screenshot.js",
+    "preview": "node tools/dev-server.js"
+  },
+  "devDependencies": {
+    "ffmpeg-static": "^5.3.0",
+    "puppeteer-core": "^23.0.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.2.0"
+  }
+}

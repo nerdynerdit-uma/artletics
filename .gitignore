@@ -1,0 +1,8 @@
+node_modules/
+_raw/screens/
+.env*.local
+.DS_Store
+assets/video/original/
+
+# Leftovers from the Next.js scaffold this folder started as
+.next/
