@@ -11,5 +11,67 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "/portfolio-1",
+      "destination": "/galerij",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-1/project-one-f5w4d-kybrb",
+      "destination": "/galerij/introductiedag",
+      "permanent": true
+    },
+    {
+      "source": "/galerij/project-one-f5w4d-kybrb",
+      "destination": "/galerij/introductiedag",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-1/week2",
+      "destination": "/galerij/week-2",
+      "permanent": true
+    },
+    {
+      "source": "/galerij/week2",
+      "destination": "/galerij/week-2",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-1/project-three-sng7y-pal9z",
+      "destination": "/galerij/week-3",
+      "permanent": true
+    },
+    {
+      "source": "/galerij/project-three-sng7y-pal9z",
+      "destination": "/galerij/week-3",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-1/project-four-l3zw3-btry6",
+      "destination": "/galerij/week-4",
+      "permanent": true
+    },
+    {
+      "source": "/galerij/project-four-l3zw3-btry6",
+      "destination": "/galerij/week-4",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-1/project-five-748cx-xwhsl",
+      "destination": "/galerij/week-5",
+      "permanent": true
+    },
+    {
+      "source": "/galerij/project-five-748cx-xwhsl",
+      "destination": "/galerij/week-5",
+      "permanent": true
+    },
+    {
+      "source": "/portfolio-1/:path*",
+      "destination": "/galerij/:path*",
+      "permanent": true
+    }
   ]
 }

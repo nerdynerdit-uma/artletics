@@ -22,7 +22,11 @@ const MEASUREMENTS_DIR = '_raw/measurements';
 // Pages that exist on the live site but were dropped from the replica at the user's
 // request. They are not built, and every link to them is removed from the pages and
 // the footer, so nothing points at a missing address.
-const REMOVED_PAGES = new Set(['subsidieregeling']);
+const REMOVED_PAGES = new Set([
+    'subsidieregeling',
+    'jongeren-aan-het-woord',
+    'portfolio-1__project-six-6f87e-5dxgy' // Week 6: only a "binnenkort beschikbaar" placeholder
+]);
 
 const SLUG_TO_FILE = { home: 'welkom' };
 const HOME_SLUG = 'welkom'; // the live site serves this at /
@@ -51,8 +55,29 @@ function pageSlug(file) {
 }
 
 // Links match the live site's addresses: /over-ons, /portfolio-1/week2
+// Addresses the user renamed. The sub-pages move with their parent, so
+// portfolio-1__week2 is published at /galerij/week2.
+// The gallery's sub-pages get readable addresses in place of Squarespace's generated
+// ones. The specific entries come first: publicSlug takes the first match.
+const RENAMED_PAGES = {
+    'portfolio-1__project-one-f5w4d-kybrb': 'galerij__introductiedag',
+    'portfolio-1__week2': 'galerij__week-2',
+    'portfolio-1__project-three-sng7y-pal9z': 'galerij__week-3',
+    'portfolio-1__project-four-l3zw3-btry6': 'galerij__week-4',
+    'portfolio-1__project-five-748cx-xwhsl': 'galerij__week-5',
+    'portfolio-1': 'galerij'
+};
+
+function publicSlug(slug) {
+    for (const [from, to] of Object.entries(RENAMED_PAGES)) {
+        if (slug === from) return to;
+        if (slug.startsWith(`${from}__`)) return to + slug.slice(from.length);
+    }
+    return slug;
+}
+
 function href(slug) {
-    return slug === HOME_SLUG ? '/' : `/${slug.replace(/__/g, '/')}`;
+    return slug === HOME_SLUG ? '/' : `/${publicSlug(slug).replace(/__/g, '/')}`;
 }
 
 // Rewrites links that point at the live site's paths to our local files
@@ -122,10 +147,33 @@ function marqueeContainer(marquee) {
     return parts.length ? `; ${parts.join('; ')}` : '';
 }
 
+// Text placed above a page's card grid at the user's request; not on the live site.
+// The heading itself sits in the page's own hero (see CONTENT_EDITS), so only the
+// sentence is added here.
+const GRID_INTROS = {
+    'portfolio-1': {
+        text: 'Een terugblik op workshops, trajecten en eindmomenten die Artletics ' +
+            'daadwerkelijk heeft uitgevoerd met leerlingen en jongeren.'
+    }
+};
+
 // Text the user asked to change, which therefore differs from the live site. Each entry
 // names the block it belongs to and the exact text to swap, so a rebuild keeps the edit
 // and a mismatch is reported instead of silently doing nothing.
 const CONTENT_EDITS = [
+    {
+        block: 'fe-block-ca2a7e4d76b92239f263',
+        note: 'footer visiting address, moved to Schiedam 2026-09-21',
+        find: 'Westblaak 92, 3012 KM Rotterdam ',
+        replace: 'Calandstraat 63, 3125 BA Schiedam, Netherlands'
+    },
+    {
+        block: 'fe-block-1cfe23816540c10bd90d',
+        note: 'gallery hero title, renamed 2026-09-21',
+        find: '<span class="sqsrte-text-color--white">WORKSHOPS EN TO</span><span class="sqsrte-text-color--custom" style="color: hsl(296, 78%, 50%)">FF</span><span class="sqsrte-text-color--white">E DINGEN</span>',
+        replace: '<span class="sqsrte-text-color--custom" style="color: hsl(296, 78%, 50%)">ART</span>' +
+            '<span class="sqsrte-text-color--white">LETICS IN DE PRAKTIJK</span>'
+    },
     {
         block: 'fe-block-yui_3_17_2_1_1756538813343_3749',
         note: 'homepage intro, new copy supplied 2026-09-21',
@@ -300,26 +348,25 @@ function convertBlock($, block, warnings, slug, knownSlugs, state) {
     }
 
     if (type === 'map') {
-        // Same location as the original (Westblaak, Rotterdam), without needing an API key
-        const bbox = '4.4723%2C51.9146%2C4.4823%2C51.9186';
-        return `<div class="block-map"><iframe title="Kaart: Westblaak, Rotterdam" loading="lazy" ` +
-            `src="https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&amp;layer=mapnik&amp;marker=51.91664%2C4.477294"></iframe></div>`;
+        // The address the user gave (Calandstraat 63, Schiedam), geocoded once via
+        // OpenStreetMap, so the map needs no API key
+        const bbox = '4.3938%2C51.9319%2C4.4038%2C51.9369';
+        return `<div class="block-map"><iframe title="Kaart: Calandstraat 63, Schiedam" loading="lazy" ` +
+            `src="https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&amp;layer=mapnik&amp;marker=51.934376%2C4.3988009"></iframe></div>`;
     }
 
     if (type === 'form') {
-        // Same fields, labels and order as the original, minus the newsletter checkbox.
+        // Same fields and order as the original, but in Dutch throughout and without the
+        // newsletter checkbox or the "Hoe heet je" group heading, which the user dropped.
         // assets/js/contact.js posts it to /api/contact; see that file for what sending needs.
         return `<form class="block-form" id="contactForm" novalidate>
-        <fieldset class="form-group">
-          <legend class="form-group-title">Hoe heet je</legend>
-          <div class="form-row">
-            <label class="form-field"><span class="form-caption">First Name<span class="form-required">(required)</span></span><input type="text" name="firstName" autocomplete="given-name" required></label>
-            <label class="form-field"><span class="form-caption">Last Name<span class="form-required">(required)</span></span><input type="text" name="lastName" autocomplete="family-name" required></label>
-          </div>
-        </fieldset>
-        <label class="form-field"><span class="form-title">Je mail<span class="form-required">(required)</span></span><input type="email" name="email" autocomplete="email" required></label>
-        <label class="form-field"><span class="form-title">Waar praten we over?<span class="form-required">(required)</span></span><input type="text" name="subject" required></label>
-        <label class="form-field"><span class="form-title">Je bericht<span class="form-required">(required)</span></span><textarea name="message" rows="4" required></textarea></label>
+        <div class="form-row">
+          <label class="form-field"><span class="form-title">Voornaam<span class="form-required">(vereist)</span></span><input type="text" name="firstName" autocomplete="given-name" required></label>
+          <label class="form-field"><span class="form-title">Achternaam<span class="form-required">(vereist)</span></span><input type="text" name="lastName" autocomplete="family-name" required></label>
+        </div>
+        <label class="form-field"><span class="form-title">Je mail<span class="form-required">(vereist)</span></span><input type="email" name="email" autocomplete="email" required></label>
+        <label class="form-field"><span class="form-title">Waar praten we over?<span class="form-required">(vereist)</span></span><input type="text" name="subject" required></label>
+        <label class="form-field"><span class="form-title">Je bericht<span class="form-required">(vereist)</span></span><textarea name="message" rows="4" required></textarea></label>
         <button type="submit" class="form-submit">Stuur Nu</button>
         <p class="form-note" id="contactNote" role="status" hidden></p>
       </form>`;
@@ -395,12 +442,18 @@ function convertPlainSection($, section, slug, knownSlugs) {
             const title = (item.find('h1, h2, h3, h4').first().text() || item.text()).replace(/\s+/g, ' ').trim().slice(0, 80);
             // The card itself is the link on the original, so check it before looking inside
             const target = item.is('a') ? item.attr('href') : item.find('a').first().attr('href');
+            // Cards for pages the replica dropped go too, or they would link nowhere
+            if (REMOVED_PAGES.has((target || '').replace(/^\/|\/$/g, '').replace(/\//g, '__'))) return;
             const link = rewriteHref(target, knownSlugs) || '#';
             if (link === '#') warnings.push(`${slug}: card "${title}" has no link`);
             const picture = local ? `<img src="${local}" alt="${title.replace(/"/g, '&quot;')}" loading="lazy">` : '';
             cards.push(`      <a class="grid-card" href="${link}">${picture}<span class="grid-card-title">${title}</span></a>`);
         });
-        return `    <div class="grid-cards">\n${cards.join('\n')}\n    </div>`;
+        const intro = GRID_INTROS[slug];
+        const heading = intro
+            ? `    <div class="grid-intro">\n      <p>${intro.text}</p>\n    </div>\n`
+            : '';
+        return `${heading}    <div class="grid-cards">\n${cards.join('\n')}\n    </div>`;
     }
 
     // Item list: a large centred title over columns of items (the original's title is a
@@ -763,10 +816,7 @@ function buildNav(knownSlugs) {
             ['Muziek', '/muziek'],
             ['Voetbal', '/voetbal']
         ]],
-        ['Galerij', null, [
-            ['Jongeren aan het woord', '/jongeren-aan-het-woord'],
-            ['Disciplines', '/portfolio-1']
-        ]],
+        ['Galerij', '/galerij'],
         ['Eindfestival', null, [
             ['Info', '/info'],
             ['Fotos Voorbereiding', '/fotos-voorbereiding']
@@ -835,8 +885,8 @@ for (const file of targets) {
         continue;
     }
     const page = convertPage(file, knownSlugs, warnings);
-    // Portfolio pages live under /portfolio-1/, matching the live site
-    const out = page.slug === HOME_SLUG ? 'index.html' : `${page.slug.replace(/__/g, '/')}.html`;
+    // The gallery and its sub-pages live under /galerij/ (see RENAMED_PAGES)
+    const out = page.slug === HOME_SLUG ? 'index.html' : `${publicSlug(page.slug).replace(/__/g, '/')}.html`;
     fs.mkdirSync(path.dirname(out), { recursive: true });
     fs.writeFileSync(out, renderPage(page, nav, footer));
     const blocks = (page.body.match(/class="fe-block /g) || []).length;

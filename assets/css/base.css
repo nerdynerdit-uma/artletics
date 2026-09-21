@@ -598,11 +598,27 @@ a {
 
 /* Portfolio grid: three square cards across, one on phones, with the title appearing
    over a near-white overlay on hover. Sizes measured on the original. */
+/* Six columns with each card spanning two: the same three-up layout as the original
+   (identical card widths), but a half-full last row can be centred. */
 .grid-cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 30px;
     padding: 0 1vw;
+}
+
+.grid-card {
+    grid-column: span 2;
+}
+
+/* A last row of two: start it one column in, so the pair sits in the middle */
+.grid-card:nth-child(3n + 1):nth-last-child(2) {
+    grid-column: 2 / span 2;
+}
+
+/* A last row of one: centred on its own */
+.grid-card:nth-child(3n + 1):last-child {
+    grid-column: 3 / span 2;
 }
 
 .grid-card {
@@ -645,6 +661,12 @@ a {
     .grid-cards {
         grid-template-columns: 1fr;
         padding: 0 var(--sqs-mobile-site-gutter);
+    }
+
+    .grid-card,
+    .grid-card:nth-child(3n + 1):nth-last-child(2),
+    .grid-card:nth-child(3n + 1):last-child {
+        grid-column: auto;
     }
 
     .grid-card-title {
@@ -913,5 +935,32 @@ a {
         border: 0;
         padding: 0.8rem 0 0 1rem;
         background: transparent;
+    }
+}
+
+/* Text above a card grid (see GRID_INTROS in tools/convert.js).
+   Same type as the ambition paragraph on Over Ons. */
+.grid-intro {
+    padding: 0 1vw 2.5rem;
+    text-align: center;
+}
+
+.grid-intro p {
+    max-width: 52rem;
+    margin: 0 auto;
+    font-size: calc(1.15rem + 1.1020vw);
+    line-height: 1.066;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+}
+
+@media (max-width: 767px) {
+    .grid-intro {
+        padding: 0 var(--sqs-mobile-site-gutter) 1.75rem;
+    }
+
+    .grid-intro p {
+        font-size: 27.7px;
+        line-height: 1.065;
     }
 }
