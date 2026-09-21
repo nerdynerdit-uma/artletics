@@ -19,6 +19,11 @@ const CSS_OUT_DIR = 'assets/css/pages';
 const MANIFEST = '_raw/image-manifest.json';
 const MEASUREMENTS_DIR = '_raw/measurements';
 
+// Pages that exist on the live site but were dropped from the replica at the user's
+// request. They are not built, and every link to them is removed from the pages and
+// the footer, so nothing points at a missing address.
+const REMOVED_PAGES = new Set(['subsidieregeling']);
+
 const SLUG_TO_FILE = { home: 'welkom' };
 const HOME_SLUG = 'welkom'; // the live site serves this at /
 
@@ -115,6 +120,104 @@ function marqueeContainer(marquee) {
         parts.push(`--marquee-pad: ${side('top')} 0 ${side('bottom')}`);
     }
     return parts.length ? `; ${parts.join('; ')}` : '';
+}
+
+// Text the user asked to change, which therefore differs from the live site. Each entry
+// names the block it belongs to and the exact text to swap, so a rebuild keeps the edit
+// and a mismatch is reported instead of silently doing nothing.
+const CONTENT_EDITS = [
+    {
+        block: 'fe-block-yui_3_17_2_1_1756538813343_3749',
+        note: 'homepage intro, new copy supplied 2026-09-21',
+        find: 'is een cultureel programma dat kunst en cultuur centraal stelt, waarin jongeren de kans krijgen zich creatief uit te drukken. Het programma is ontwikkeld door <strong>Stichting Facts</strong> en <strong>Youngins</strong> en richt zich op jongeren vanaf 12 jaar tot 16 jaar.',
+        replace: 'biedt een breed en praktijkgericht workshopaanbod waarin sport, cultuur, media, ' +
+            'creativiteit, gezondheid en sociale ontwikkeling samenkomen. Leerlingen en jongeren ' +
+            'creëren, bewegen, ontdekken en groeien onder begeleiding van ervaren professionals ' +
+            'uit de praktijk.<br><br>Artletics is inzetbaar als losse workshop, lessenreeks, ' +
+            'schooltraject, naschools aanbod, wijkprogramma of Impactweek. De invulling wordt ' +
+            'afgestemd op de doelgroep, doelen, beschikbare periode en locatie.'
+    },
+    {
+        block: 'fe-block-17933744fcf19f8ec43f',
+        note: 'homepage disciplines, orange line added 2026-09-21',
+        find: 'en zich sociaal en persoonlijk te ontwikkelen.</em></strong><em>&nbsp; </em>',
+        replace: 'en zich sociaal en persoonlijk te ontwikkelen.</em></strong><em>&nbsp; </em>' +
+            '<br><br><span class="sqsrte-text-color--custom" style="color: rgb(255, 146, 41)">' +
+            '<strong><em>Voor groep 7 en 8, voortgezet onderwijs, praktijkonderwijs en mbo. ' +
+            'Ook inzetbaar op wijklocaties en binnen vakantieprogramma’s.</em></strong></span>'
+    },
+    {
+        block: 'fe-block-yui_3_17_2_1_1756538813343_4728',
+        note: 'homepage "Ontdekken door te doen" heading, new copy 2026-09-21',
+        find: 'Het programma is bedacht naar aanleiding van enquêtes die onder jongeren met leeftijdscategorie 12-16 jaar zijn uitgedeeld.&nbsp; ',
+        replace: '<strong>ONTDEKKEN DOOR TE DOEN</strong>'
+    },
+    {
+        block: 'fe-block-yui_3_17_2_1_1756538813343_4728',
+        note: 'homepage "Ontdekken door te doen" body, new copy 2026-09-21',
+        find: 'In een&nbsp; samenleving waar cultuur niet alleen door kunst, muziek of theater wordt uitgedragen, maar ook&nbsp; door de manier waarop mensen zich met elkaar verbinden, biedt voetbal een krachtig middel om jongeren in aanraking te brengen met de bredere culturele waarden van samenwerking, respect,&nbsp; discipline en zelfexpressie. Door voetbal op te nemen in het programma van Artletics, worden jongeren niet&nbsp;alleen fysiek geactiveerd, maar wordt hen ook een platform aangeboden om zich te uiten en te ontwikkelen als culturele deelnemers. ',
+        replace: 'Jongeren hoeven vooraf niet te weten waar hun talent ligt. Binnen Artletics kunnen zij ' +
+            'creëren, bewegen, maken, samenwerken en ontdekken wat bij hen past.<br><br>' +
+            'Artletics biedt uiteenlopende workshops op het gebied van sport, cultuur, media, ' +
+            'creativiteit, gezondheid en persoonlijke ontwikkeling. Denk bijvoorbeeld aan design, ' +
+            'dans, muziek en DJ, voetbal, (kick)boksen, graffiti en street art, koken, hairstyling ' +
+            'en social media &amp; content.<br><br>' +
+            'De workshops kunnen afzonderlijk worden ingezet of worden gecombineerd tot een ' +
+            'lessenreeks, meerweeks traject, schoolprogramma, wijkprogramma of Impactweek. Een ' +
+            'traject kan worden afgesloten met een presentatie, showcase of gezamenlijk eindevent.'
+    }
+];
+
+// Questions dropped from the FAQ page, by the number they carry on the live site.
+// The ones that stay are renumbered from 1 without gaps.
+const REMOVED_FAQS = [1];
+
+// The FAQ runs across two columns and its numbering does not follow document order
+// (5-9 sit in the left block, 1-4 and 10-12 in the right), so the numbers are read from
+// the text itself. A question is a paragraph starting with "<n>." and its answer is the
+// paragraph after it.
+function dropFaqs(html, warnings) {
+    const $ = cheerio.load(html, null, false);
+    const numbered = /^\s*(\d+)\.\s/;
+    const questions = [];
+
+    $('p').each((i, el) => {
+        const match = numbered.exec($(el).text());
+        if (match) questions.push({ number: Number(match[1]), el });
+    });
+
+    for (const gone of REMOVED_FAQS) {
+        const question = questions.find(q => q.number === gone);
+        if (!question) {
+            warnings.push(`faqs: question ${gone} is no longer on the page`);
+            continue;
+        }
+        $(question.el).next('p').remove(); // its answer
+        $(question.el).remove();
+    }
+
+    const staying = questions.filter(q => !REMOVED_FAQS.includes(q.number)).sort((a, b) => a.number - b.number);
+    staying.forEach((question, index) => {
+        const wanted = index + 1;
+        if (question.number === wanted) return;
+        const before = $(question.el).html();
+        // The number sits at the start, sometimes inside the <strong>, sometimes before it
+        $(question.el).html(before.replace(/(^|>)(\s*)\d+\.(\s|&nbsp;)/, `$1$2${wanted}.$3`));
+    });
+
+    return $.html();
+}
+
+function applyContentEdits(html, blockClass, slug, warnings) {
+    for (const edit of CONTENT_EDITS) {
+        if (edit.block !== blockClass) continue;
+        if (!html.includes(edit.find)) {
+            warnings.push(`${slug}: content edit "${edit.note}" no longer matches the live text`);
+            continue;
+        }
+        html = html.replace(edit.find, edit.replace);
+    }
+    return html;
 }
 
 // --- blocks -----------------------------------------------------------------------
@@ -546,8 +649,9 @@ function convertSections($, root, slug, knownSlugs, warnings, measured, state) {
         grid.children('.fe-block').each((j, b) => {
             const block = $(b);
             const blockClass = (block.attr('class') || '').split(/\s+/).find(c => c.startsWith('fe-block-'));
-            const content = convertBlock($, block, warnings, slug, knownSlugs, state);
-            if (!content) return;
+            const converted = convertBlock($, block, warnings, slug, knownSlugs, state);
+            if (!converted) return;
+            const content = applyContentEdits(converted, blockClass, slug, warnings);
             blocks.push(`      <div class="fe-block ${blockClass}">${content}</div>`);
             const typography = typographyCss(blockClass, measured);
             if (typography) cssParts.push(typography);
@@ -595,15 +699,32 @@ function convertPage(file, knownSlugs, warnings) {
     fs.mkdirSync(CSS_OUT_DIR, { recursive: true });
     fs.writeFileSync(path.join(CSS_OUT_DIR, `${slug}.css`), [body.css, footer.css].filter(Boolean).join('\n\n') + '\n');
 
-    return { slug, title, description, body: body.html, footer: footer.html, headerTheme: body.firstTheme || 'white' };
+    const html = slug === 'faqs' ? dropFaqs(body.html, warnings) : body.html;
+
+    return { slug, title, description, body: html, footer: footer.html, headerTheme: body.firstTheme || 'white' };
 }
 
 // --- shell ------------------------------------------------------------------------
+// Takes out links to pages the replica does not have, along with the line break that
+// separated them from the link above in a footer list
+function dropRemovedLinks(html) {
+    for (const slug of REMOVED_PAGES) {
+        const link = `<a href="/${slug}">[\\s\\S]*?</a>`;
+        html = html
+            .replace(new RegExp(`<span class="sqsrte-text-color--[a-z]+"><br></span>\\s*${link}`, 'g'), '')
+            .replace(new RegExp(`${link}\\s*<span class="sqsrte-text-color--[a-z]+"><br></span>`, 'g'), '')
+            .replace(new RegExp(`<li><a href="/${slug}">[\\s\\S]*?</a></li>`, 'g'), '')
+            .replace(new RegExp(link, 'g'), '');
+    }
+    return html;
+}
+
 function renderPage({ slug, title, description, body, footer, headerTheme }, nav, fallbackFooter) {
     nav = nav.replace('class="site-header"', `class="site-header header-${headerTheme || 'white'}"`);
-    const footerHtml = footer
+    body = dropRemovedLinks(body);
+    const footerHtml = dropRemovedLinks(footer
         ? `<footer class="site-footer">\n${footer}\n</footer>`
-        : fallbackFooter;
+        : fallbackFooter);
     // Only the page with the form loads the form's script
     const formScript = body.includes('id="contactForm"')
         ? '\n<script src="/assets/js/contact.js" defer></script>'
@@ -642,7 +763,7 @@ function buildNav(knownSlugs) {
             ['Muziek', '/muziek'],
             ['Voetbal', '/voetbal']
         ]],
-        ['Gallerij', null, [
+        ['Galerij', null, [
             ['Jongeren aan het woord', '/jongeren-aan-het-woord'],
             ['Disciplines', '/portfolio-1']
         ]],
@@ -692,7 +813,8 @@ function buildFooter() {
 
 // --- run --------------------------------------------------------------------------
 const args = process.argv.slice(2);
-const files = fs.readdirSync(PAGES_DIR).filter(f => f.endsWith('.html'));
+const files = fs.readdirSync(PAGES_DIR)
+    .filter(f => f.endsWith('.html') && !REMOVED_PAGES.has(pageSlug(f)));
 const knownSlugs = new Set(files.map(pageSlug));
 const targets = args.includes('--all')
     ? files

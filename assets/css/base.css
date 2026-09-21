@@ -147,6 +147,9 @@ a {
 .nav-toggle {
     display: none;
     flex-direction: column;
+    /* Buttons do not inherit colour by default: without this the bars stay black
+       and disappear against a dark header */
+    color: inherit;
     gap: 5px;
     background: none;
     border: 0;
@@ -902,10 +905,13 @@ a {
         gap: 1.1rem;
     }
 
-    .nav-submenu {
+    /* Submenus open with the menu instead of on hover. The selector has to match the
+       desktop rule's weight (.site-nav .nav-submenu), or that one keeps them hidden. */
+    .site-nav .nav-submenu {
         position: static;
         display: flex;
         border: 0;
         padding: 0.8rem 0 0 1rem;
+        background: transparent;
     }
 }
