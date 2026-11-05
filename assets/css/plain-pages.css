@@ -1,0 +1,490 @@
+/* Pages written by hand, with no Squarespace original behind them: the Aanbod
+   sub-pages and Workshops. The replicated pages are laid out on Fluid Engine grid
+   coordinates; these have no coordinates to carry over, so they use a plain centred
+   column instead. Colours, fonts and heading sizes come from base.css, so they sit in
+   the same design as the rest of the site.
+
+   tools/convert.js never writes this file. */
+
+/* The replicated pages paint their section colour with a .section-bg layer measured
+   from the original. These pages have no original, so they carry their own background;
+   theme-black in base.css only sets the text colour. */
+.plain-page {
+    /* The client asked for the text to run the full width of the page rather than in a
+       reading column, so the only limit left is the section padding. */
+    --plain-max: none;
+    background: var(--black);
+    min-height: 70vh;
+    /* The header lies over the top of the first section (see .site-header in
+       base.css), so the padding has to clear it. On a phone the tagline wraps onto a
+       second line, which is why the floor is this high. */
+    padding: max(7vw, 7rem) 6vw 9vw;
+}
+
+@media (min-width: 768px) {
+    .plain-page {
+        padding: max(5vw, 6rem) 4vw 7vw;
+    }
+}
+
+/* One left-aligned column. Only the width is set here: the blocks below set their own
+   vertical margins, and an auto left margin would lose against those shorthands and
+   leave half the page centred and half of it flush left. */
+.plain-page > * {
+    max-width: var(--plain-max);
+}
+
+.plain-page .plain-eyebrow {
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin: 0 0 1rem;
+}
+
+.plain-page h1 {
+    font-size: clamp(2.6rem, 1rem + 5.4vw, 5.4rem);
+    line-height: 1.03;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.5rem;
+}
+
+.plain-page h2 {
+    font-size: clamp(1.7rem, 1rem + 1.8vw, 2.6rem);
+    line-height: 1.12;
+    letter-spacing: -0.015em;
+    margin: 3.5rem 0 1rem;
+}
+
+.plain-page .plain-lead {
+    font-size: clamp(1.15rem, 1rem + 0.7vw, 1.6rem);
+    line-height: 1.4;
+    margin: 0 0 2.5rem;
+}
+
+.plain-page p {
+    font-size: 1.15rem;
+    line-height: 1.55;
+    margin: 1rem 0;
+}
+
+/* Card grids: the two audience pages and the workshop list */
+.plain-cards {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* Five goals in one row on a wide screen, so the last card does not drop to a row of
+   its own. Below that the grid above falls back to as many as fit. */
+@media (min-width: 1000px) {
+    .plain-cards-5 {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+.plain-cards li {
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+
+.plain-cards h3 {
+    font-size: 1.25rem;
+    line-height: 1.25;
+    margin: 0 0 0.5rem;
+}
+
+.plain-cards p {
+    font-size: 1.02rem;
+    line-height: 1.5;
+    margin: 0;
+    max-width: none;
+    opacity: 0.86;
+}
+
+/* The accent rule that separates the intro from the rest */
+.plain-rule {
+    border: 0;
+    border-top: 3px solid var(--accent);
+    width: 4.5rem;
+    margin: 0 auto 0 0;
+}
+
+/* The section is a flex column (see .page-section in base.css), so a child is stretched
+   to the full width unless it says otherwise. Both lines are needed: align-self for the
+   flex stretch, width for .page-section > * { width: 100% }. */
+.plain-page .plain-cta {
+    display: inline-block;
+    align-self: flex-start;
+    width: auto;
+    margin-top: 2.5rem;
+    padding: 0.9rem 1.6rem;
+    border: 2px solid var(--accent);
+    border-radius: 0.3rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: inherit;
+}
+
+.plain-page .plain-cta:hover,
+.plain-page .plain-cta:focus-visible {
+    background: var(--accent);
+    color: var(--white);
+}
+
+/* Content that still has to come from Artletics itself. Visible on purpose, so nobody
+   mistakes a half-filled page for a finished one. */
+.plain-todo {
+    margin-top: 3.5rem;
+    padding: 1.25rem 1.5rem;
+    border-left: 3px solid var(--green);
+    background: rgba(156, 241, 9, 0.07);
+}
+
+.plain-todo p {
+    font-size: 1rem;
+    margin: 0;
+    opacity: 0.85;
+}
+
+/* --- the flyer gallery on /workshops/voor-scholen ------------------------------- */
+
+/* Wider than the reading column the rest of the page uses: these are posters, and at
+   1120px they ended up small with a lot of empty space beside them. Four columns keeps
+   the twelve workshops in three even rows. */
+.flyer-raster {
+    display: grid;
+    gap: 2rem 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    max-width: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 1100px) {
+    .flyer-raster {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.flyer-tegel h3 {
+    font-size: 1.2rem;
+    line-height: 1.25;
+    margin: 1rem 0 0.4rem;
+}
+
+.flyer-tegel p {
+    font-size: 1rem;
+    line-height: 1.45;
+    margin: 0;
+    max-width: none;
+    opacity: 0.8;
+}
+
+/* The flyers are not all the same shape (1055x1491, 1024x1536, 1024x1415), so the tile
+   fixes the ratio and the image sits inside it whole. Setting it on the button rather
+   than the image keeps the grid from jumping while the images load. */
+.flyer-knop {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1055 / 1491;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0.5rem;
+    background: #0b0b0b;
+    cursor: pointer;
+    overflow: hidden;
+    color: inherit;
+    font: inherit;
+}
+
+.flyer-knop img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    transition: transform 0.25s ease;
+}
+
+.flyer-knop:hover {
+    border-color: var(--accent);
+}
+
+.flyer-knop:hover img {
+    transform: scale(1.03);
+}
+
+.flyer-knop:focus-visible {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+/* How many versions sit behind this tile (girls edition, boys edition) */
+.flyer-aantal {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 1rem;
+    background: rgba(0, 0, 0, 0.72);
+    color: var(--white);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+/* --- the lightbox ---------------------------------------------------------------- */
+
+.flyer-venster[hidden] {
+    display: none;
+}
+
+.flyer-venster {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.9);
+}
+
+body.flyer-open {
+    overflow: hidden;
+}
+
+.flyer-groot {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    max-height: 100%;
+    min-width: 0;
+}
+
+.flyer-groot img {
+    max-width: 100%;
+    max-height: calc(100vh - 7rem);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 0.4rem;
+}
+
+.flyer-groot figcaption {
+    color: var(--white);
+    font-size: 1rem;
+    text-align: center;
+}
+
+.flyer-venster button {
+    flex: none;
+    background: rgba(255, 255, 255, 0.12);
+    border: 0;
+    border-radius: 50%;
+    color: var(--white);
+    cursor: pointer;
+    font: inherit;
+    line-height: 1;
+}
+
+.flyer-venster button:hover,
+.flyer-venster button:focus-visible {
+    background: var(--accent);
+}
+
+.flyer-vorige,
+.flyer-volgende {
+    width: 3rem;
+    height: 3rem;
+    font-size: 2rem;
+}
+
+.flyer-vorige[hidden],
+.flyer-volgende[hidden] {
+    display: none;
+}
+
+.flyer-sluit {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.8rem;
+}
+
+/* On a phone there is no room for the arrows beside the flyer, so they sit on top of
+   its edges instead, the way a photo gallery does it. */
+@media (max-width: 599px) {
+    .flyer-venster {
+        padding: 1rem;
+    }
+
+    .flyer-groot img {
+        max-height: calc(100vh - 8rem);
+    }
+
+    .flyer-vorige,
+    .flyer-volgende {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 2.75rem;
+        height: 2.75rem;
+        font-size: 1.6rem;
+        background: rgba(0, 0, 0, 0.6);
+    }
+
+    .flyer-vorige {
+        left: 0.5rem;
+    }
+
+    .flyer-volgende {
+        right: 0.5rem;
+    }
+}
+
+/* --- the discipline images on /workshops/artletics-plus -------------------------- */
+
+/* The same tiles and the same lightbox as the flyers, but these come out of the
+   project plan in landscape, so they are shown two to a row instead of four. */
+.beeld-raster {
+    gap: 2.5rem 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+}
+
+@media (min-width: 700px) {
+    .beeld-raster {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.beeld-raster .flyer-knop {
+    aspect-ratio: 1378 / 919;
+}
+
+/* These fill their tile: they are photographs, not posters with a margin of their own */
+.beeld-raster .flyer-knop img {
+    object-fit: cover;
+}
+
+.beeld-raster .flyer-tegel ul {
+    margin: 0.75rem 0 0;
+    padding-left: 1.1rem;
+}
+
+.beeld-raster .flyer-tegel li {
+    font-size: 1rem;
+    line-height: 1.45;
+    margin: 0.35rem 0;
+    opacity: 0.8;
+}
+
+/* A line of small print under a table or a set of images: where the figures come from,
+   or that the pictures are illustrations rather than photographs of participants. */
+.plain-bron {
+    font-size: 0.95rem;
+    line-height: 1.45;
+    opacity: 0.65;
+    margin: 0.9rem 0 0;
+}
+
+/* --- the source list ------------------------------------------------------------- */
+
+.plain-bronnen {
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: bron;
+}
+
+.plain-bronnen li {
+    counter-increment: bron;
+    margin: 1.5rem 0 0;
+    padding-left: 2.5rem;
+    position: relative;
+}
+
+.plain-bronnen li::before {
+    content: counter(bron);
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+    color: var(--green);
+}
+
+.plain-bronnen h3 {
+    font-size: 1.15rem;
+    line-height: 1.25;
+    margin: 0 0 0.3rem;
+}
+
+.plain-bronnen p {
+    font-size: 1.02rem;
+    margin: 0;
+    opacity: 0.86;
+}
+
+.plain-bronnen a {
+    color: inherit;
+    text-decoration-color: var(--accent);
+    text-underline-offset: 0.2em;
+}
+
+.plain-bronnen a:hover,
+.plain-bronnen a:focus-visible {
+    color: var(--accent);
+}
+
+/* --- tables ---------------------------------------------------------------------- */
+
+.plain-tabelwrap {
+    margin: 1.75rem 0 0;
+    overflow-x: auto;
+}
+
+.plain-tabel {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 34rem;
+    font-size: 1.02rem;
+    line-height: 1.45;
+}
+
+.plain-tabel th,
+.plain-tabel td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.7rem 1rem 0.7rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.plain-tabel thead th {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green);
+    border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+.plain-tabel tbody th {
+    font-weight: 700;
+    padding-right: 1.5rem;
+}
+
+/* The plus in the Artletics+ wordmark */
+.plain-plus {
+    color: var(--accent);
+}

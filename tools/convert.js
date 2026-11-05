@@ -12,6 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const cheerio = require('cheerio');
+const { buildNav } = require('./nav');
 
 const PAGES_DIR = '_raw/pages';
 const RENDERED_DIR = '_raw/rendered';
@@ -60,6 +61,10 @@ function pageSlug(file) {
 // The gallery's sub-pages get readable addresses in place of Squarespace's generated
 // ones. The specific entries come first: publicSlug takes the first match.
 const RENAMED_PAGES = {
+    // The Eindfestival pages used to sit in a menu folder of their own; they are now
+    // sub-pages of the gallery, so their addresses moved with them.
+    'info': 'galerij__eindfestival',
+    'fotos-voorbereiding': 'galerij__fotos-voorbereiding',
     'portfolio-1__project-one-f5w4d-kybrb': 'galerij__introductiedag',
     'portfolio-1__week2': 'galerij__week-2',
     'portfolio-1__project-three-sng7y-pal9z': 'galerij__week-3',
@@ -817,42 +822,6 @@ ${footerHtml}
 `;
 }
 
-function buildNav(knownSlugs) {
-    const items = [
-        ['Welkom', '/'],
-        ['Over Ons', '/over-ons'],
-        ['Disciplines', null, [
-            ['Creatieve Artwork', '/creatieve-artwork'],
-            ['Dans', '/dans'],
-            ['Muziek', '/muziek'],
-            ['Voetbal', '/voetbal']
-        ]],
-        ['Galerij', '/galerij'],
-        ['Eindfestival', null, [
-            ['Info', '/info'],
-            ['Fotos Voorbereiding', '/fotos-voorbereiding']
-        ]],
-        ['Contact', '/contact']
-    ];
-    const render = ([label, url, children]) => children
-        ? `      <li class="nav-folder"><button type="button" aria-expanded="false">${label}</button>
-        <ul class="nav-submenu">${children.map(([l, u]) => `<li><a href="${u}">${l}</a></li>`).join('')}</ul>
-      </li>`
-        : `      <li><a href="${url}">${label}</a></li>`;
-
-    return `<header class="site-header">
-  <a class="site-tagline" href="/">&ldquo;Waar kunst, sport en jongerenkracht samenkomen&rdquo;</a>
-  <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
-  <nav id="site-nav" class="site-nav">
-    <ul>
-${items.map(render).join('\n')}
-    </ul>
-  </nav>
-</header>`;
-}
-
 function buildFooter() {
     const links = [
         ['Cookies Beleid', '/cookies'],
@@ -887,7 +856,7 @@ if (!targets.length) {
 }
 
 const warnings = [];
-const nav = buildNav(knownSlugs);
+const nav = buildNav();
 const footer = buildFooter();
 
 for (const file of targets) {

@@ -9,10 +9,29 @@
     --green: rgb(156, 241, 9);
     --body-font: "Helvetica Neue", Arial, sans-serif; /* exactly the original's stack */
 
+    /* The menu only. Everything else stays on the original's Helvetica stack. */
+    --display-font: "Orbitron", "Helvetica Neue", Arial, sans-serif;
+
     /* The grid CSS expects these. Values read from the live site's theme. */
     --sqs-site-max-width: 3000px;
     --sqs-site-gutter: 1vw;
     --sqs-mobile-site-gutter: 6vw;
+}
+
+/* Orbitron, the square technical face the menu is set in. Self-hosted rather than
+   pulled from Google's CDN: the rest of the site loads nothing from a third party, and
+   that should stay true. One variable file covers weights 400 to 900.
+   SIL Open Font License 1.1 — see assets/fonts/README.txt. */
+@font-face {
+    font-family: "Orbitron";
+    font-style: normal;
+    font-weight: 400 900;
+    font-display: swap;
+    src: url("../fonts/orbitron-latin-variable.woff2") format("woff2");
+    /* Latin only; anything outside it falls through to the stack in --display-font */
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+        U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+        U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 /* Row heights are a share of the grid's own width */
@@ -95,6 +114,10 @@ a {
     list-style: none;
 }
 
+/* font-family comes after the font shorthand, which would otherwise reset it to the
+   body stack. Orbitron is wider and has a taller x-height than Helvetica, so the same
+   nominal size reads larger; the gap between the top-level items is tightened below to
+   keep the menu on one line. */
 .site-nav a,
 .site-nav button {
     background: none;
@@ -102,6 +125,7 @@ a {
     padding: 0;
     color: inherit;
     font: inherit;
+    font-family: var(--display-font);
     font-size: 0.85rem;
     font-weight: 600;
     text-decoration: none;
@@ -123,19 +147,28 @@ a {
     position: relative;
 }
 
+/* The panel hangs from the right edge of its folder, not the left: the menu itself sits
+   against the right edge of the window, so a panel growing rightwards would run off the
+   screen. Labels are kept on one line for the same reason — "Scholen, gemeenten &
+   organisaties" wrapped into three lines at the original 13rem. */
 .site-nav .nav-submenu {
     display: none;
     list-style: none;
     margin: 0;
     position: absolute;
     top: 100%;
-    left: 0;
+    left: auto;
+    right: 0;
     min-width: 13rem;
     flex-direction: column;
     gap: 0.75rem;
     padding: 1rem;
     background: var(--black);
     border: 1px solid #222;
+}
+
+.site-nav .nav-submenu a {
+    white-space: nowrap;
 }
 
 .site-nav .nav-folder[aria-expanded="true"] .nav-submenu,
@@ -935,6 +968,12 @@ a {
         border: 0;
         padding: 0.8rem 0 0 1rem;
         background: transparent;
+    }
+
+    /* The desktop panel keeps labels on one line; here there is no room for that, so
+       the long ones wrap instead of pushing the page sideways. */
+    .site-nav .nav-submenu a {
+        white-space: normal;
     }
 }
 
