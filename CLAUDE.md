@@ -107,8 +107,9 @@ Dark theme: black sections, white text, a bright red/orange accent
 (`hsl(1.6, 97%, 55%)`), plus green used in the wordmark.
 
 Type: `"Helvetica Neue", Arial, sans-serif` everywhere (`--body-font`, exactly the
-original's stack), except the menu, which is set in **Orbitron** (`--display-font`) at
-the client's request — the square technical face used on their SpineTech brand. It is
+original's stack), except the menu and the page titles on the hand-written pages, which
+are set in **Orbitron** (`--display-font`) at the client's request — the square
+technical face used on their SpineTech brand. It is
 self-hosted in `assets/fonts/`, one 11.8 KB variable file covering weights 400 to 900,
 so the site still makes no third-party requests. Do not pull it from Google's CDN.
 

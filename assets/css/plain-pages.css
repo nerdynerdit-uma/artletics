@@ -34,6 +34,13 @@
     max-width: var(--plain-max);
 }
 
+/* The page title and the label above it are set in the same face as the menu, at the
+   client's request. The rest of the page stays in the body font. */
+.plain-page .plain-eyebrow,
+.plain-page h1 {
+    font-family: var(--display-font);
+}
+
 .plain-page .plain-eyebrow {
     font-size: 1rem;
     letter-spacing: 0.14em;
