@@ -100,8 +100,11 @@ a {
 }
 
 .site-tagline {
+    /* Same face as the menu beside it, at the client's request. Orbitron runs wide, so
+       the size is a notch down to keep the header on one line as long as before. */
+    font-family: var(--display-font);
     font-weight: 700;
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-decoration: none;
 }
 
@@ -931,7 +934,13 @@ a {
     .block-text h3 {
         font-size: 1.4rem;
     }
+}
 
+/* The menu folds into the hamburger long before the phone breakpoint. Below about
+   1150px the tagline and the six menu items no longer fit beside each other and the
+   header fell onto two ragged lines, with "Over Ons" wrapping inside the menu. The
+   type sizes above keep the original's 767px breakpoint; only the header moves. */
+@media (max-width: 1149px) {
     .nav-toggle {
         display: flex;
     }

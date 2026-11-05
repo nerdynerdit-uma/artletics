@@ -54,6 +54,12 @@ node tools/apply-nav.js
 each page's own `header-*` theme, and touches nothing below the header, so it is safe to
 run twice.
 
+The menu folds into the hamburger below **1149px**, not at the 767px the rest of the
+mobile styling uses: the tagline and six items in Orbitron need about 1150px beside each
+other, and below that the header used to break onto two ragged lines. That one media
+query in `base.css` is deliberately separate from the 767px block, which carries the
+original's type sizes.
+
 ## Pages written by hand
 
 `aanbod/*.html` and `workshops/*.html` have no Squarespace original behind them, so
@@ -107,9 +113,9 @@ Dark theme: black sections, white text, a bright red/orange accent
 (`hsl(1.6, 97%, 55%)`), plus green used in the wordmark.
 
 Type: `"Helvetica Neue", Arial, sans-serif` everywhere (`--body-font`, exactly the
-original's stack), except the menu and the page titles on the hand-written pages, which
-are set in **Orbitron** (`--display-font`) at the client's request — the square
-technical face used on their SpineTech brand. It is
+original's stack), except the header — menu and tagline — and the page titles on the
+hand-written pages, which are set in **Orbitron** (`--display-font`) at the client's
+request: the square technical face used on their SpineTech brand. It is
 self-hosted in `assets/fonts/`, one 11.8 KB variable file covering weights 400 to 900,
 so the site still makes no third-party requests. Do not pull it from Google's CDN.
 
