@@ -71,12 +71,14 @@ credits, which the client asked to leave out. The four disciplines halfway down 
 chapter openers of pages 7 to 10 — Power Up, Move It, Create Your Sound and Design It —
 and they use the same lightbox as the flyer gallery.
 
-The plan is an appendix to a funding application, so parts of it are written for the
-fund, not for a visitor. Those are deliberately off the page: the budget and the own
-contribution, the four hours of staff time behind each workshop, the attendance-moment
-count, the task split around invoices and accounting, the volunteer hours and expenses,
-and the reporting paragraphs under Monitoring. The funder is not named anywhere. Leave
-it that way unless the client asks otherwise.
+The plan is an appendix to a funding application, so a good deal of it is written for
+the fund, not for a visitor. That part is deliberately off the page and the client
+confirmed every cut: the budget and the own contribution, the four hours of staff time
+behind each workshop, the attendance-moment count, the task split around invoices and
+accounting, the volunteer hours and expenses, the reporting paragraphs under Monitoring,
+the summary table of application details, the chapter on building on the school
+programme, the evaluation questions, and the chapters on risks and on the follow-up.
+The funder is not named anywhere. Leave it that way unless the client asks otherwise.
 `node tools/plus-beelden.js` reads those four illustrations straight out of the PDF
 (1378x919 raw RGB, Flate-compressed, in page order) and writes them to
 `assets/images/artletics-plus/` as a tile and a full-size WebP, 865 KB in all. They are
