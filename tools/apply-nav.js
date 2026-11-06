@@ -1,4 +1,5 @@
-// Refreshes the header and the ?v= asset stamps in every page of the site.
+// Refreshes the header, the band at the head of the footer and the ?v= asset stamps in
+// every page of the site.
 //
 //   node tools/apply-nav.js            write the changes
 //   node tools/apply-nav.js --check    only report what would change
@@ -6,8 +7,9 @@
 // tools/convert.js rebuilds the pages that have a Squarespace original behind them, but
 // not the hand-written ones (workshops.html, aanbod/*). This walks every page instead,
 // so one menu change in tools/nav.js reaches all of them. It keeps each page's own
-// header theme (header-white / header-black / header-dark) and leaves everything below
-// the header alone, which makes it safe to run after convert.js and safe to run twice.
+// header theme (header-white / header-black / header-dark) and touches nothing between
+// the header and the footer, which makes it safe to run after convert.js and safe to
+// run twice.
 
 const fs = require('fs');
 const path = require('path');
@@ -16,6 +18,25 @@ const { buildNav } = require('./nav');
 
 const ROOT = path.join(__dirname, '..');
 const SKIP_DIRS = new Set(['_raw', 'node_modules', '.git', '.next', 'tools', 'api', 'assets']);
+
+// The band at the head of the footer, on every page. It is not a block in the Fluid
+// Engine grid below it: that grid carries coordinates measured on the live site, and a
+// new block there would need placements of its own for desktop and mobile. This sits
+// above it instead and brings its own colours (see .footer-cta in base.css).
+const FOOTER_CTA = `  <div class="footer-cta">
+    <p>Een deelnemer aanmelden of een workshop aanvragen?</p>
+    <a class="footer-cta-knop" href="/aanmelden">Direct aanmelden</a>
+  </div>`;
+
+// Idempotent: an existing band is taken out first and written again, so changing the
+// text above is enough. The sign-up page itself does not get one.
+function withFooterCta(html, name) {
+    const opening = html.match(/<footer class="site-footer"[^>]*>/);
+    if (!opening) return html;
+    const zonder = html.replace(/\n[ \t]*<div class="footer-cta">[\s\S]*?<\/div>/, '');
+    if (name === 'aanmelden.html') return zonder;
+    return zonder.replace(opening[0], `${opening[0]}\n${FOOTER_CTA}`);
+}
 
 function pages(dir = ROOT, found = []) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -53,6 +74,7 @@ for (const file of pages()) {
     const theme = (header[1].match(/header-([a-z-]+)/) || [])[1] || 'white';
 
     let after = before.replace(header[0], buildNav(theme));
+    after = withFooterCta(after, name);
 
     // Re-stamp the stylesheets and the script so a changed file is not served from a
     // stale cache. Only CSS and JS, which is what convert.js stamps; images keep their

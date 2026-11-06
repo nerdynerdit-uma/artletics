@@ -26,7 +26,7 @@ images in `assets/images/`. No framework, no bundler, no build step for the site
 | `node tools/fetch-rendered.js [slug]` | Save live pages as rendered after scripts run, into `_raw/rendered/` |
 | `node tools/measure-live.js <slug> \| --all` | Measure live text sizes and section heights into `_raw/measurements/` |
 | `node tools/convert.js <slug> \| --all` | Build the static pages from the rendered copies and measurements |
-| `node tools/apply-nav.js [--check]` | Put the current menu and asset stamps into every page, hand-written ones included |
+| `node tools/apply-nav.js [--check]` | Put the current menu, the footer band and the asset stamps into every page, hand-written ones included |
 | `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the five Artletics voor Scholen pages |
 | `node tools/plus-beelden.js ["<plan.pdf>"]` | Pull the four discipline illustrations out of the Artletics+ project plan |
 | `node tools/compare.js <slug> [mobile]` | Block-by-block position/size differences, rebuild vs live |
@@ -51,8 +51,15 @@ node tools/apply-nav.js
 ```
 
 `apply-nav.js` also refreshes the `?v=` stamps on the stylesheets and the script, keeps
-each page's own `header-*` theme, and touches nothing below the header, so it is safe to
-run twice.
+each page's own `header-*` theme, and touches nothing between the header and the footer,
+so it is safe to run twice.
+
+It puts one more thing on every page: the **band at the head of the footer**, with the
+Direct aanmelden button. `FOOTER_CTA` in that file is the markup. It is not a block in
+the Fluid Engine grid under it — that grid carries coordinates measured on the live site,
+and a new block would need placements of its own — so it sits above the grid and brings
+its own colours. An existing band is removed before the new one goes in, so editing the
+text there is enough. `aanmelden.html` is the one page that does not get one.
 
 The menu folds into the hamburger below **1149px**, not at the 767px the rest of the
 mobile styling uses: the tagline and six items in Orbitron need about 1150px beside each
@@ -70,6 +77,15 @@ asked for that, so `--plain-max` is `none` and the paragraphs carry no `max-widt
 
 The two `aanbod/` pages still carry placeholder text drawn from the homepage copy,
 marked as such on the page; the real content has to come from Artletics.
+
+`aanmelden.html` is the sign-up page the footer band points at, modelled on a page the
+client pointed to: step 1 is the role you come from (school, gemeente or wijkteam,
+woonzorglocatie, wijkpartner, or a young person or parent), step 2 the details. Those
+five roles are the audiences the rest of the site already addresses, not the reference's
+own list. It posts to `/api/contact`, the same endpoint and the same mailbox as the
+contact form, with the role and the programme folded into the subject and the message, so
+there is one mail service to keep working rather than two. That means it answers that it
+is not connected until RESEND_API_KEY and CONTACT_FROM are set in Vercel.
 
 `workshops/in-de-wijk.html` is the client's gemeente catalogue, *Artletics in de Wijk
 2026-2027*, pages 6 to 8: what Artletics brings to a neighbourhood, the Impactweek, and
@@ -157,14 +173,14 @@ Those coordinates are the layout. Carry them over rather than guessing at spacin
 
 - The live site declares `lang="en-US"` while all content is Dutch. The replica uses
   `lang="nl"`.
-- 30 pages: 14 in the root, 7 under `galerij/`, 2 under `aanbod/` and 7 under
+- 31 pages: 15 in the root, 7 under `galerij/`, 2 under `aanbod/` and 7 under
   `workshops/`. The Eindfestival
   pages moved under the gallery (`/info` -> `/galerij/eindfestival`,
   `/fotos-voorbereiding` -> `/galerij/fotos-voorbereiding`), with redirects from the old
   addresses in `vercel.json`.
-- No shop, membership or booking system. The only form is on Contact. It posts to
-  `api/contact.js` (Vercel function, Resend), which needs RESEND_API_KEY and
-  CONTACT_FROM set in Vercel; without them it answers that it is not connected yet
+- No shop, membership or booking system. Two forms, on Contact and on Aanmelden, and
+  both post to `api/contact.js` (Vercel function, Resend), which needs RESEND_API_KEY
+  and CONTACT_FROM set in Vercel; without them it answers that it is not connected yet
   and sends nothing. Mail goes to info@stichtingfacts.nl.
 - Image blocks keep their own fit from the original: most show the whole image
   (`contain`, including the logo), some crop to fill (`cover`).

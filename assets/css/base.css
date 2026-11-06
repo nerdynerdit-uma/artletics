@@ -1012,3 +1012,53 @@ a {
         line-height: 1.065;
     }
 }
+
+/* --- the call to action at the head of the footer -------------------------------- */
+
+/* One band across the top of the footer, on every page. tools/apply-nav.js puts the
+   markup in and keeps it there, so it does not have to be a block in the Fluid Engine
+   grid below it, which carries measured coordinates. It sets its own colours: the
+   footer section under it is white, but a plain page above it is black. */
+.footer-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.8rem 2rem;
+    padding: 1.5rem var(--sqs-mobile-site-gutter);
+    background: var(--white);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    color: var(--black);
+}
+
+@media (min-width: 768px) {
+    .footer-cta {
+        padding: 1.6rem var(--sqs-site-gutter);
+    }
+}
+
+.footer-cta p {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.footer-cta-knop {
+    display: inline-block;
+    padding: 0.85rem 1.5rem;
+    border-radius: 0.3rem;
+    background: var(--accent);
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.footer-cta-knop:hover,
+.footer-cta-knop:focus-visible {
+    background: var(--black);
+    color: var(--white);
+}

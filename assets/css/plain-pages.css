@@ -754,3 +754,258 @@ body.flyer-open {
     line-height: 1.25;
     margin: 2.25rem 0 0.5rem;
 }
+
+/* --- the sign-up page ------------------------------------------------------------ */
+
+.aanmeld-form {
+    max-width: 52rem;
+    margin: 0;
+}
+
+/* A numbered step, the way the client's reference lays it out */
+.stap {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.9rem;
+    margin: 3.25rem 0 1.25rem;
+}
+
+.stap:first-of-type {
+    margin-top: 2.5rem;
+}
+
+.stap-nummer {
+    flex: none;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.3rem;
+    font-family: var(--display-font);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.stap h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 1rem + 1.3vw, 2.1rem);
+}
+
+/* The heading above a set of roles */
+.rol-groep {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 1.75rem 0 0.9rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green);
+}
+
+.rol-groep::before {
+    content: "";
+    flex: none;
+    width: 2rem;
+    height: 1px;
+    background: currentColor;
+}
+
+.rol-kaarten {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.rol-kaart {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    height: 100%;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.rol-kaart:hover {
+    background: rgba(255, 255, 255, 0.045);
+}
+
+/* Only for the keyboard: a mouse click already shows itself in the border below, and
+   an outline on top of that reads as a mistake. */
+.rol-kaart:has(input:focus-visible) {
+    outline: 3px solid var(--accent);
+    outline-offset: 3px;
+}
+
+/* The chosen card. Browsers without :has() still show the filled radio below. */
+.rol-kaart:has(input:checked) {
+    border-color: var(--accent);
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.rol-kaart input {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0.75rem 0 0;
+    border: 2px solid rgba(255, 255, 255, 0.45);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+}
+
+.rol-kaart input:checked {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 0.22rem var(--accent);
+}
+
+.rol-icoon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 0.4rem;
+    background: rgba(255, 255, 255, 0.08);
+    transition: background 0.2s ease;
+}
+
+.rol-icoon svg {
+    width: 1.4rem;
+    height: 1.4rem;
+}
+
+.rol-kaart:has(input:checked) .rol-icoon {
+    background: var(--accent);
+}
+
+.rol-titel {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.rol-wat {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    opacity: 0.72;
+}
+
+/* --- the fields ------------------------------------------------------------------ */
+
+.aanmeld-rij {
+    display: grid;
+    gap: 0 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.aanmeld-veld {
+    display: block;
+    margin-bottom: 1.1rem;
+}
+
+.aanmeld-veld > span {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.aanmeld-veld .optioneel {
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+/* Not the radios in step 1: those are drawn by .rol-kaart input above, and a rule
+   this far down the file would otherwise win and stretch them across the card. */
+.aanmeld-form input:not([type="radio"]),
+.aanmeld-form select,
+.aanmeld-form textarea {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 0.3rem;
+    background: #0b0b0b;
+    color: var(--white);
+    font: inherit;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+
+.aanmeld-form select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 2.2rem;
+    cursor: pointer;
+}
+
+/* The arrow on the select, drawn rather than loaded */
+.aanmeld-veld:has(select) {
+    position: relative;
+}
+
+.aanmeld-veld:has(select)::after {
+    content: "";
+    position: absolute;
+    right: 1rem;
+    bottom: 1.35rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-right: 2px solid rgba(255, 255, 255, 0.6);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+    transform: rotate(45deg);
+    pointer-events: none;
+}
+
+.aanmeld-form select option {
+    background: #0b0b0b;
+    color: var(--white);
+}
+
+.aanmeld-form input:not([type="radio"]):focus,
+.aanmeld-form select:focus,
+.aanmeld-form textarea:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.aanmeld-form input::placeholder,
+.aanmeld-form textarea::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.aanmeld-form textarea {
+    min-height: 7rem;
+    resize: vertical;
+}
+
+.aanmeld-form .form-submit {
+    margin-top: 0.5rem;
+    border-radius: 0.3rem;
+}
+
+.aanmeld-privacy {
+    margin-top: 1.25rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    opacity: 0.72;
+}
+
+.aanmeld-privacy a {
+    color: inherit;
+}
