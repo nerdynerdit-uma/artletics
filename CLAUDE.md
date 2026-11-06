@@ -71,6 +71,14 @@ asked for that, so `--plain-max` is `none` and the paragraphs carry no `max-widt
 The two `aanbod/` pages still carry placeholder text drawn from the homepage copy,
 marked as such on the page; the real content has to come from Artletics.
 
+`workshops/in-de-wijk.html` is the client's gemeente catalogue, *Artletics in de Wijk
+2026-2027*, pages 6 to 8: what Artletics brings to a neighbourhood, the Impactweek, and
+what a gemeente, school or partner has taken off their hands. The catalogue's own
+contact block is not on it — the site is the website it points at, and the footer already
+carries the address, phone and mail — so that block is the contact button instead. Pages
+1 to 5 of the same catalogue are the four workshop lines, and live under Artletics voor
+Scholen rather than here.
+
 `workshops/artletics-plus.html` is the client's own project plan (Artletics Plus
 Projectplan 2027) as a web page: every chapter except the closing contact and image
 credits, which the client asked to leave out. The four disciplines halfway down are the
@@ -149,7 +157,7 @@ Those coordinates are the layout. Carry them over rather than guessing at spacin
 
 - The live site declares `lang="en-US"` while all content is Dutch. The replica uses
   `lang="nl"`.
-- 29 pages: 14 in the root, 7 under `galerij/`, 2 under `aanbod/` and 6 under
+- 30 pages: 14 in the root, 7 under `galerij/`, 2 under `aanbod/` and 7 under
   `workshops/`. The Eindfestival
   pages moved under the gallery (`/info` -> `/galerij/eindfestival`,
   `/fotos-voorbereiding` -> `/galerij/fotos-voorbereiding`), with redirects from the old

@@ -26,7 +26,8 @@ const NAV_ITEMS = [
     ]],
     ['Workshops', null, [
         ['Artletics Plus', '/workshops/artletics-plus'],
-        ['Artletics voor Scholen', '/workshops/voor-scholen']
+        ['Artletics voor Scholen', '/workshops/voor-scholen'],
+        ['Artletics in de Wijk', '/workshops/in-de-wijk']
     ]],
     ['Galerij', null, [
         ['Galerij', '/galerij'],

@@ -680,3 +680,77 @@ body.flyer-open {
         display: none;
     }
 }
+
+/* --- a plain list of points ------------------------------------------------------ */
+
+/* Set like the body text, with the round accent bullet the client's own catalogue
+   uses rather than the browser's disc. */
+.plain-lijst {
+    max-width: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.plain-lijst li {
+    position: relative;
+    margin: 0.7rem 0;
+    padding-left: 1.7rem;
+    font-size: 1.15rem;
+    line-height: 1.55;
+}
+
+.plain-lijst li::before {
+    content: "";
+    position: absolute;
+    left: 0.1rem;
+    top: 0.6em;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+/* A line of short facts, separated rather than bulleted: the "flexibel samen te
+   stellen" strip on the wijk page. */
+.plain-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.4rem;
+    max-width: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.plain-strip li {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    opacity: 0.88;
+}
+
+.plain-strip li + li {
+    position: relative;
+    padding-left: 1.4rem;
+}
+
+.plain-strip li + li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+/* A sub-heading inside a chapter of a hand-written page. Direct children only: the
+   headings inside a card, a flyer tile or the source list carry their own size, and
+   this rule sits later in the file than those. Until now a bare h3 fell through to the
+   browser's default, which is barely larger than the body text around it. */
+.plain-page > h3 {
+    font-size: 1.35rem;
+    line-height: 1.25;
+    margin: 2.25rem 0 0.5rem;
+}
