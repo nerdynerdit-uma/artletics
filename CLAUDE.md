@@ -27,7 +27,7 @@ images in `assets/images/`. No framework, no bundler, no build step for the site
 | `node tools/measure-live.js <slug> \| --all` | Measure live text sizes and section heights into `_raw/measurements/` |
 | `node tools/convert.js <slug> \| --all` | Build the static pages from the rendered copies and measurements |
 | `node tools/apply-nav.js [--check]` | Put the current menu and asset stamps into every page, hand-written ones included |
-| `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write `workshops/voor-scholen.html` |
+| `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the five Artletics voor Scholen pages |
 | `node tools/plus-beelden.js ["<plan.pdf>"]` | Pull the four discipline illustrations out of the Artletics+ project plan |
 | `node tools/compare.js <slug> [mobile]` | Block-by-block position/size differences, rebuild vs live |
 | `node tools/check-page.js <page>` | Broken images and failed requests on a local page |
@@ -91,13 +91,27 @@ The funder is not named anywhere. Leave it that way unless the client asks other
 AI-generated, which the plan states under each one, so the page and the lightbox
 caption say so too. Do not present them as photographs of participants.
 
-## The workshop gallery
+## Artletics voor Scholen
 
-`/workshops/voor-scholen` is generated: `tools/workshops.js` is the catalogue (heading,
-blurb and flyer files per workshop) and `tools/build-workshops.js` converts the flyers
-and writes the page. The source artwork is 2 MB PNGs delivered by the client and stays
+Five generated pages: `tools/workshops.js` is the catalogue (the four workshop lines,
+and per workshop its line, heading, blurb and flyer files) and `tools/build-workshops.js`
+converts the flyers and writes them.
+
+`/workshops/voor-scholen` is the overview the menu points at, and holds no flyers of its
+own: four blocks, one per workshop line, each showing the first flyers of that line as a
+preview strip. Behind each one is its own gallery at `/workshops/<line>`, which carries
+the flyer grid and the lightbox and links on to the other three lines. The lines, their
+order and the four colours (orange, purple, teal, green) come from the client's gemeente
+catalogue, *Artletics in de Wijk 2026-2027*; the colours were read out of that PDF rather
+than guessed. Those colours appear nowhere else on the site, which is otherwise black,
+white and the red accent.
+
+Let's Talk is two tiles, Her Space and His Space, because the catalogue lists them as two
+offerings. Two workshops in that catalogue have no artwork in the flyer delivery and are
+therefore on no page: Caribbean Kitchen and Capture It. `ZONDER_FLYER` in
+`tools/workshops.js` says so; add the flyers and they drop straight in. The source artwork is 2 MB PNGs delivered by the client and stays
 out of the repo; each flyer becomes a 700px tile and a 1100px WebP in
-`assets/images/workshops/` (6.1 MB for all 20, against 42 MB of originals). The lightbox
+`assets/images/workshops/` (6.2 MB for all 20, against 42 MB of originals). The lightbox
 lives in `assets/js/flyers.js`, which the tool writes a link to but never overwrites.
 
 The white band at the foot of every flyer — the two logos and www.artletics.nl — is cut
@@ -108,8 +122,8 @@ white shape rather than a band, so its cut is given by hand in `VOET_HANDMATIG`.
 cropped flyers run 1.27 to 1.41 times as tall as they are wide; `.flyer-knop` sits at
 1:1.32, between the two, and the photographs have square corners.
 Several flyers can sit behind one tile: `Kick It` has a girls edition, `Safe & Strong`
-has three. 14 workshops; the lead sentence and the meta description count themselves, so
-adding one to the catalogue needs no edit to the page.
+has three. 15 workshops; the lead sentence and every meta description count and name
+themselves, so adding one to the catalogue needs no edit to a page.
 
 Two delivered flyers are deliberately left out, both the graffiti workshop printed for
 one school: they carry a start date and the Yulius College address, so the page would go
@@ -135,7 +149,7 @@ Those coordinates are the layout. Carry them over rather than guessing at spacin
 
 - The live site declares `lang="en-US"` while all content is Dutch. The replica uses
   `lang="nl"`.
-- 25 pages: 14 in the root, 7 under `galerij/`, 2 under `aanbod/` and 2 under
+- 29 pages: 14 in the root, 7 under `galerij/`, 2 under `aanbod/` and 6 under
   `workshops/`. The Eindfestival
   pages moved under the gallery (`/info` -> `/galerij/eindfestival`,
   `/fotos-voorbereiding` -> `/galerij/fotos-voorbereiding`), with redirects from the old

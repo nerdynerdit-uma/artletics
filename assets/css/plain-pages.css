@@ -49,6 +49,17 @@
     margin: 0 0 1rem;
 }
 
+/* On the gallery pages the label is the way back to the overview */
+.plain-page .plain-eyebrow a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.plain-page .plain-eyebrow a:hover,
+.plain-page .plain-eyebrow a:focus-visible {
+    text-decoration: underline;
+}
+
 .plain-page h1 {
     font-size: clamp(2.6rem, 1rem + 5.4vw, 5.4rem);
     line-height: 1.03;
@@ -113,10 +124,11 @@
     opacity: 0.86;
 }
 
-/* The accent rule that separates the intro from the rest */
+/* The accent rule that separates the intro from the rest. A workshop line page sets
+   --lijn on it, so the rule takes that line's own colour. */
 .plain-rule {
     border: 0;
-    border-top: 3px solid var(--accent);
+    border-top: 3px solid var(--lijn, var(--accent));
     width: 4.5rem;
     margin: 0 auto 0 0;
 }
@@ -159,7 +171,7 @@
     opacity: 0.85;
 }
 
-/* --- the flyer gallery on /workshops/voor-scholen ------------------------------- */
+/* --- the flyer gallery on each /workshops/<workshoplijn> page ------------------- */
 
 /* Wider than the reading column the rest of the page uses: these are posters, and at
    1120px they ended up small with a lot of empty space beside them. Four columns keeps
@@ -498,4 +510,173 @@ body.flyer-open {
 /* The plus in the Artletics+ wordmark */
 .plain-plus {
     color: var(--accent);
+}
+
+/* --- the four workshop lines on /workshops/voor-scholen -------------------------- */
+
+/* The overview is a menu of four galleries. Each block shows the first flyers of its
+   line, so you see what is behind the link before you follow it. --lijn is set on the
+   block itself, in the colour the client's own catalogue prints that line in. */
+.lijn-menu {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+    max-width: none;
+    margin: 2.5rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 900px) {
+    .lijn-menu {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.lijn-tegel {
+    display: flex;
+}
+
+.lijn-knop {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1.5rem 1.5rem 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-top: 4px solid var(--lijn);
+    border-radius: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.lijn-knop:hover,
+.lijn-knop:focus-visible {
+    background: rgba(255, 255, 255, 0.045);
+    border-color: var(--lijn);
+}
+
+.lijn-knop:focus-visible {
+    outline: 3px solid var(--lijn);
+    outline-offset: 3px;
+}
+
+/* Four slots whatever the line holds, so every block shows its flyers at the same
+   size. A line with two workshops fills the first two and leaves the rest empty. */
+.lijn-beelden {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.lijn-beelden img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1.32;
+    object-fit: cover;
+    background: #0b0b0b;
+    transition: opacity 0.2s ease;
+}
+
+.lijn-knop:hover .lijn-beelden img {
+    opacity: 0.8;
+}
+
+/* The same face as the page title you land on */
+.lijn-nummer,
+.lijn-titel {
+    font-family: var(--display-font);
+}
+
+.lijn-nummer {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lijn);
+}
+
+.lijn-titel {
+    font-size: clamp(1.4rem, 1rem + 1.1vw, 2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0.6rem 0 0.9rem;
+}
+
+.lijn-omschrijving {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    opacity: 0.85;
+}
+
+.lijn-namen {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    opacity: 0.6;
+}
+
+/* Pushed to the foot of the block so the four read as one row */
+.lijn-meer {
+    margin-top: auto;
+    padding-top: 1.5rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--lijn);
+}
+
+/* --- the other lines, at the foot of a gallery page ------------------------------ */
+.lijn-rij {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    max-width: none;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.lijn-rij a {
+    display: block;
+    height: 100%;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-left: 4px solid var(--lijn);
+    border-radius: 0.4rem;
+    font-family: var(--display-font);
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: inherit;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.lijn-rij a span {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lijn);
+}
+
+.lijn-rij a:hover,
+.lijn-rij a:focus-visible {
+    background: rgba(255, 255, 255, 0.045);
+    border-color: var(--lijn);
+}
+
+/* On a phone four posters side by side are too small to recognise, so the strip drops
+   to three and the fourth stands down. */
+@media (max-width: 559px) {
+    .lijn-beelden {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .lijn-beelden img:nth-child(n + 4) {
+        display: none;
+    }
 }
