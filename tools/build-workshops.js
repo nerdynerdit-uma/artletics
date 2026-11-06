@@ -35,11 +35,54 @@ const alleenPagina = args.includes('--page-only');
 const bron = args.find(a => !a.startsWith('--')) || DEFAULT_BRON;
 
 // --- the images -------------------------------------------------------------------
-function webp(van, naar, breedte) {
+
+// Every flyer ends in a white band with the Stichting Facts and Youngins logos and
+// www.artletics.nl. On the website itself that is stating the obvious, so it is cut
+// off: the flyer runs to the row of icons and stops there.
+//
+// The band is found by reading the flyer as a small grey image and walking up from the
+// bottom while the rows stay light. One flyer does not have a straight band — the DJ
+// one ends in a diagonal white shape — so its cut is given here by hand.
+const VOET_HANDMATIG = {
+    'Mix-It-Up-DJ-Workshop-Artletics-flyer.jpeg': 0.155
+};
+const VOET_MIN = 0.02;   // below this there is no band to speak of
+const VOET_MAX = 0.14;   // above this something else is going on; leave the flyer be
+
+function witteVoet(bestand) {
+    const handmatig = VOET_HANDMATIG[path.basename(bestand)];
+    if (handmatig !== undefined) return handmatig;
+
+    const breed = 32;
+    const hoog = 500;
+    const ruw = execFileSync(ffmpeg, [
+        '-v', 'error', '-i', bestand,
+        '-vf', `scale=${breed}:${hoog}:flags=area,format=gray`,
+        '-f', 'rawvideo', '-'
+    ], { maxBuffer: 1 << 26 });
+
+    let y = hoog - 1;
+    while (y >= 0) {
+        let som = 0;
+        for (let x = 0; x < breed; x++) som += ruw[y * breed + x];
+        // 165, not something closer to white: the logos sitting in the band pull a
+        // row's average well down, and stopping at the first of those would leave
+        // most of the band on the flyer.
+        if (som / breed < 165) break;
+        y--;
+    }
+    const fractie = (hoog - 1 - y) / hoog;
+    return fractie >= VOET_MIN && fractie <= VOET_MAX ? fractie : 0;
+}
+
+function webp(van, naar, breedte, voet) {
+    const snijden = voet > 0
+        ? `crop=iw:floor(ih*${(1 - voet).toFixed(4)}/2)*2:0:0,`
+        : '';
     execFileSync(ffmpeg, [
         '-y', '-loglevel', 'error',
         '-i', van,
-        '-vf', `scale=${breedte}:-2:flags=lanczos`,
+        '-vf', `${snijden}scale=${breedte}:-2:flags=lanczos`,
         '-quality', String(KWALITEIT),
         '-compression_level', '6',
         naar
@@ -82,11 +125,13 @@ for (const workshop of WORKSHOPS) {
             overgeslagen++;
             return;
         }
-        webp(van, tegel, TEGEL_BREED);
-        webp(van, groot, GROOT_BREED);
+        const voet = witteVoet(van);
+        webp(van, tegel, TEGEL_BREED, voet);
+        webp(van, groot, GROOT_BREED, voet);
         gemaakt++;
         console.log(`  ${naam.padEnd(20)} ${String(kb(tegel)).padStart(4)} KB tile, `
-            + `${String(kb(groot)).padStart(4)} KB large   <- ${flyer}`);
+            + `${String(kb(groot)).padStart(4)} KB large, `
+            + `voet ${(voet * 100).toFixed(1).padStart(4)}%   <- ${flyer}`);
     });
     plaatjes.set(workshop.slug, lijst);
 }
@@ -112,17 +157,19 @@ function esc(s) {
 const tegels = WORKSHOPS.map(w => {
     const beelden = plaatjes.get(w.slug);
     const data = beelden.map(b => b.groot).join('|');
+    // How many flyers sit behind this tile. It used to sit in the corner of the
+    // artwork, which was fine while the flyers ended in a white band; now that the
+    // band is cropped off it would cover a label, so it sits beside the heading.
     const extra = beelden.length > 1
-        ? `<span class="flyer-aantal">${beelden.length} versies</span>`
+        ? ` <span class="flyer-aantal">${beelden.length} versies</span>`
         : '';
     return `      <li class="flyer-tegel">
         <button type="button" class="flyer-knop" data-flyers="${esc(data)}"
           data-titel="${esc(w.titel)}" aria-haspopup="dialog">
           <img src="${beelden[0].tegel}" alt="Flyer van de ${esc(w.titel.toLowerCase())}: ${esc(w.naam)}"
             loading="lazy">
-          ${extra}
         </button>
-        <h3>${esc(w.titel)}</h3>
+        <h3>${esc(w.titel)}${extra}</h3>
         <p>${esc(w.omschrijving)}</p>
       </li>`;
 }).join('\n');

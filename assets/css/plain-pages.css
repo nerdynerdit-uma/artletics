@@ -201,10 +201,12 @@
     display: block;
     position: relative;
     width: 100%;
-    aspect-ratio: 1055 / 1491;
+    /* The flyers lose their white footer in tools/build-workshops.js, which leaves them
+       between 1.27 and 1.41 times as tall as they are wide. The tile sits in the middle
+       of that range, so no flyer is boxed in much. Square corners, like the artwork. */
+    aspect-ratio: 1 / 1.32;
     padding: 0;
     border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 0.5rem;
     background: #0b0b0b;
     cursor: pointer;
     overflow: hidden;
@@ -233,18 +235,21 @@
     outline-offset: 3px;
 }
 
-/* How many versions sit behind this tile (girls edition, boys edition) */
+/* How many versions sit behind this tile (girls edition, boys edition). Beside the
+   heading rather than on the artwork: the cropped flyers run their labels right to the
+   bottom edge, so a badge in the corner covered one. */
 .flyer-aantal {
-    position: absolute;
-    right: 0.5rem;
-    bottom: 0.5rem;
-    padding: 0.25rem 0.6rem;
+    display: inline-block;
+    margin-left: 0.4rem;
+    padding: 0.15rem 0.55rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 1rem;
-    background: rgba(0, 0, 0, 0.72);
     color: var(--white);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.02em;
+    vertical-align: 0.1em;
+    white-space: nowrap;
 }
 
 /* --- the lightbox ---------------------------------------------------------------- */
@@ -285,7 +290,6 @@ body.flyer-open {
     width: auto;
     height: auto;
     object-fit: contain;
-    border-radius: 0.4rem;
 }
 
 .flyer-groot figcaption {

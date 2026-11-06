@@ -97,8 +97,16 @@ caption say so too. Do not present them as photographs of participants.
 blurb and flyer files per workshop) and `tools/build-workshops.js` converts the flyers
 and writes the page. The source artwork is 2 MB PNGs delivered by the client and stays
 out of the repo; each flyer becomes a 700px tile and a 1100px WebP in
-`assets/images/workshops/` (6.5 MB for all 20, against 42 MB of originals). The lightbox
+`assets/images/workshops/` (6.1 MB for all 20, against 42 MB of originals). The lightbox
 lives in `assets/js/flyers.js`, which the tool writes a link to but never overwrites.
+
+The white band at the foot of every flyer — the two logos and www.artletics.nl — is cut
+off: on the website itself it states the obvious. `witteVoet()` finds it by reading the
+flyer as a small grey image and walking up from the bottom while the rows stay light,
+which lands between 6 and 8 per cent on every flyer. The DJ one ends in a diagonal
+white shape rather than a band, so its cut is given by hand in `VOET_HANDMATIG`. The
+cropped flyers run 1.27 to 1.41 times as tall as they are wide; `.flyer-knop` sits at
+1:1.32, between the two, and the photographs have square corners.
 Several flyers can sit behind one tile: `Kick It` has a girls edition, `Safe & Strong`
 has three. 14 workshops; the lead sentence and the meta description count themselves, so
 adding one to the catalogue needs no edit to the page.
