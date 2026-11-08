@@ -1009,3 +1009,226 @@ body.flyer-open {
 .aanmeld-privacy a {
     color: inherit;
 }
+
+/* --- a poster that leads somewhere ------------------------------------------------ */
+
+/* A workshop with a page of its own turns its tile from a button into a link. The
+   look stays the same; only the underline and the link colour have to be undone. */
+a.flyer-knop {
+    text-decoration: none;
+}
+
+.flyer-tegel h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.flyer-tegel h3 a:hover,
+.flyer-tegel h3 a:focus-visible {
+    color: var(--accent);
+}
+
+.flyer-meer {
+    margin: 0.5rem 0 0;
+}
+
+.flyer-meer a {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+.flyer-meer a:hover,
+.flyer-meer a:focus-visible {
+    text-decoration: underline;
+}
+
+/* --- one workshop, one page ------------------------------------------------------- */
+
+/* The poster beside the paragraph that stands under it on the poster itself. Below
+   900px the poster goes on top, at a size where its own icons are still readable. */
+.ws-top {
+    display: grid;
+    gap: 1.75rem 2.5rem;
+    max-width: none;
+    margin: 2.5rem 0 0;
+}
+
+@media (min-width: 900px) {
+    .ws-top {
+        grid-template-columns: minmax(17rem, 26rem) 1fr;
+        align-items: start;
+    }
+}
+
+.ws-poster {
+    margin: 0;
+    max-width: 26rem;
+}
+
+.ws-poster figcaption {
+    margin-top: 0.7rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    opacity: 0.62;
+}
+
+.ws-intro h2 {
+    margin-top: 0;
+}
+
+/* The poster's own lead paragraph, so it reads as the opening of the page rather than
+   as one more block of body text. No max-width: the client asked for text that runs
+   the full width, and here the poster beside it already sets the measure. */
+.ws-intro p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+/* --- the four icons along the foot of the poster ---------------------------------- */
+
+.ws-iconen {
+    display: grid;
+    gap: 1.5rem 2.5rem;
+    max-width: none;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 760px) {
+    .ws-iconen {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.ws-iconen li {
+    display: flex;
+    gap: 1.1rem;
+    align-items: flex-start;
+}
+
+/* The ring around the icon carries the colour of the workshop line, the same four
+   colours the client's catalogue prints the lines in. */
+.ws-icoon {
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border: 2px solid var(--lijn, var(--accent));
+    border-radius: 50%;
+    color: var(--lijn, var(--accent));
+}
+
+.ws-icoon svg {
+    width: 1.6rem;
+    height: 1.6rem;
+}
+
+.ws-iconen h3 {
+    font-size: 1.15rem;
+    line-height: 1.25;
+    margin: 0.35rem 0 0.4rem;
+}
+
+.ws-iconen p {
+    font-size: 1.02rem;
+    line-height: 1.55;
+    margin: 0;
+    max-width: none;
+    opacity: 0.86;
+}
+
+/* --- the two ways to join --------------------------------------------------------- */
+
+.lesvormen {
+    display: grid;
+    gap: 1.25rem;
+    max-width: none;
+    margin: 1.75rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+@media (min-width: 820px) {
+    .lesvormen {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.lesvormen > li {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 0.5rem;
+    padding: 1.6rem;
+}
+
+.lesvormen h3 {
+    font-family: var(--display-font);
+    font-size: 1.3rem;
+    line-height: 1.2;
+    margin: 0;
+}
+
+.lesvorm-slogan {
+    margin: 0.45rem 0 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.lesvormen > li > p {
+    font-size: 1.02rem;
+    line-height: 1.55;
+    margin: 0.8rem 0 0;
+    max-width: none;
+    opacity: 0.86;
+}
+
+/* Smaller than the standalone list: these sit inside a card, beside a second one. */
+.lesvormen .plain-lijst {
+    margin: 1.1rem 0 0;
+}
+
+.lesvormen .plain-lijst li {
+    margin: 0.45rem 0;
+    padding-left: 1.4rem;
+    font-size: 1rem;
+    line-height: 1.45;
+}
+
+.lesvormen .plain-lijst li::before {
+    top: 0.55em;
+    width: 0.4rem;
+    height: 0.4rem;
+}
+
+/* Pushed to the foot of the card so both prices line up, however long the lists are. */
+.lesvorm-prijs {
+    margin: 1.4rem 0 0;
+    padding-top: 1.1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    opacity: 1;
+}
+
+.lesvormen > li > .lesvorm-prijs {
+    margin-top: auto;
+}
+
+.lesvorm-prijs strong {
+    display: block;
+    font-family: var(--display-font);
+    font-size: 1.7rem;
+    line-height: 1.1;
+    color: var(--white);
+}
+
+.lesvorm-prijs span {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.92rem;
+    opacity: 0.72;
+}

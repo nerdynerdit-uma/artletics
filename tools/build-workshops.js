@@ -19,6 +19,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const ffmpeg = require('ffmpeg-static');
 const { LIJNEN, WORKSHOPS, INZETVORMEN } = require('./workshops');
+const { LESVORMEN, DETAILS } = require('./workshop-detail');
 const { buildNav } = require('./nav');
 
 const DEFAULT_BRON = path.join(process.env.USERPROFILE || process.env.HOME || '',
@@ -211,8 +212,83 @@ ${lightbox ? `<script src="${stamp('assets/js/flyers.js')}" defer></script>\n` :
 `;
 }
 
-// The flyer grid, as it has always been: one tile per workshop, every version of a
-// flyer behind it in the lightbox.
+// The icons along the foot of every poster, redrawn as line art so the workshop page
+// can repeat them beside the explanation. They are deliberately plain single-colour
+// strokes: the posters are busy, the page is not, and an icon here only has to say
+// which of the four points on the poster is being explained. `icoon` in
+// tools/workshop-detail.js picks one by key.
+const svg = inhoud => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" `
+    + `stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" `
+    + `aria-hidden="true" focusable="false">${inhoud}</svg>`;
+
+const ICONEN = {
+    // pen nib - logo & branding
+    logo: svg('<path d="M12 2.5 5.6 9.4l2.3 9 4.1 3.1 4.1-3.1 2.3-9L12 2.5Z"/>'
+        + '<path d="M12 14.4v7.1"/><circle cx="12" cy="11.5" r="1.8"/>'),
+    // t-shirt - kledingdesign
+    shirt: svg('<path d="M8.6 3.4 4 6l1.7 3.9 2-.9v11.6h8.6V9l2 .9L20 6l-4.6-2.6"/>'
+        + '<path d="M8.6 3.4a3.4 3.4 0 0 0 6.8 0"/>'),
+    // lightbulb - creativiteit, creatieve expressie
+    lamp: svg('<path d="M9.3 16.4a6 6 0 1 1 5.4 0"/><path d="M9.6 18.6h4.8"/>'
+        + '<path d="M10.5 21h3"/>'),
+    // three people - presenteren, samen creeren, klantgerichtheid
+    groep: svg('<circle cx="12" cy="8.4" r="2.7"/><circle cx="5.4" cy="10.2" r="2"/>'
+        + '<circle cx="18.6" cy="10.2" r="2"/>'
+        + '<path d="M7.4 18.8c0-2.7 2-4.3 4.6-4.3s4.6 1.6 4.6 4.3"/>'
+        + '<path d="M2.6 17.6c0-2 1.2-3.2 2.8-3.2"/>'
+        + '<path d="M21.4 17.6c0-2-1.2-3.2-2.8-3.2"/>'),
+    // pencil - schets & letters
+    potlood: svg('<path d="M4 20h3.6L20 7.6a2.5 2.5 0 0 0-3.6-3.6L4 16.4V20Z"/>'
+        + '<path d="M15 5.4 18.6 9"/>'),
+    // spray can - kleur & techniek
+    spuitbus: svg('<rect x="7" y="8.2" width="7" height="12.6" rx="1.6"/>'
+        + '<path d="M8.6 8.2V5.6h3.8v2.6"/>'
+        + '<path d="M17.2 5.4h.01M19.6 3.9h.01M19.6 7.6h.01M17.2 9.6h.01"/>'),
+    // palette - kleur
+    palet: svg('<path d="M12 3.3c-5 0-8.8 3.6-8.8 8.2 0 4.3 3.3 7.4 7.3 7.4 1.5 0 2.2-.8 '
+        + '2.2-1.7 0-.6-.3-1-.3-1.6 0-.8.6-1.4 1.6-1.4h1.6c3 0 5.2-2 5.2-4.9 '
+        + '0-3.4-3.5-6-8.8-6Z"/><circle cx="7.5" cy="11.2" r=".9"/>'
+        + '<circle cx="10.3" cy="7.8" r=".9"/><circle cx="14.3" cy="7.8" r=".9"/>'
+        + '<circle cx="17.1" cy="10.8" r=".9"/>'),
+    // brush - techniek
+    penseel: svg('<path d="M20.2 3.9c-.9-.9-2-.5-3.4.9l-5.5 5.5 2.5 2.5 5.5-5.5c1.4-1.4 '
+        + '1.8-2.5.9-3.4Z"/><path d="M11.3 10.3 8.1 13.5l2.5 2.5 3.2-3.2"/>'
+        + '<path d="M8.1 13.5c-1.6 0-2.6 1-2.9 2.2-.2 1-.7 1.6-1.6 2.1 1.6.9 4.4.6 '
+        + '5.5-1 .6-.9.5-2-.5-3Z"/>'),
+    // heart - zelfexpressie
+    hart: svg('<path d="M12 20.3s-7-4.4-7-9a4 4 0 0 1 7-2.6 4 4 0 0 1 7 2.6c0 4.6-7 9-7 9Z"/>'),
+    // scissors - knippen & contouren
+    schaar: svg('<circle cx="6.2" cy="17.8" r="2.6"/><circle cx="17.8" cy="17.8" r="2.6"/>'
+        + '<path d="M8 16 19 4"/><path d="M16 16 5 4"/>'),
+    // head in profile - haar & hoofdvorm
+    hoofd: svg('<path d="M17 20.6v-3.3c1.9-1.4 3-3.5 3-5.9a8 8 0 0 0-15.8-1.6c-.2 1-.6 '
+        + '1.9-1.2 2.7-.4.6 0 1.4.7 1.4H5v2.8c0 1.1.9 2 2 2h2"/>'
+        + '<path d="M7.6 7.4c1.6-1.4 4.2-1.9 6.2-1"/>'),
+    // pump bottle and a sparkle - hygiene
+    fles: svg('<rect x="7.6" y="8.6" width="7" height="12" rx="1.8"/>'
+        + '<path d="M9.6 8.6V6h3v2.6"/><path d="M12.6 3.4h2.8v2"/>'
+        + '<path d="M19.4 9.2l.5 1.3 1.3.5-1.3.5-.5 1.3-.5-1.3-1.3-.5 1.3-.5Z"/>'),
+    // bars and a rising line - ondernemerschap
+    groei: svg('<path d="M3.6 20.6h17"/><path d="M7 20.6v-4.8M12 20.6v-7.6M17 20.6v-10.4"/>'
+        + '<path d="M5.4 9.6 10 6l3 2.2 5.6-4.8"/><path d="M14.8 3.4h3.9v3.9"/>'),
+    // a braid - vlechten & stylen
+    vlecht: svg('<path d="M12 3.4v17.2"/>'
+        + '<path d="M12 4.6c-2.2 1-2.2 3 0 4s2.2 3 0 4-2.2 3 0 4"/>'
+        + '<path d="M12 4.6c2.2 1 2.2 3 0 4s-2.2 3 0 4 2.2 3 0 4"/>'),
+    // a bottle and a tube - haarverzorging
+    verzorging: svg('<rect x="3.4" y="9.2" width="6" height="11.4" rx="1.6"/>'
+        + '<path d="M5 9.2V6.6h2.8v2.6"/><path d="M5.2 4.4h2.4"/>'
+        + '<path d="M14.4 20.6h6.2V12l-1.3-3h-3.6l-1.3 3v8.6Z"/>'
+        + '<path d="M15.6 9V6.6h3.8V9"/>')
+};
+
+// The flyer grid: one tile per workshop, with every version of the flyer behind it.
+//
+// A workshop that has an entry in DETAILS has a page of its own, and then the poster
+// is a link to that page rather than a button that enlarges it — the client asked for
+// the poster to lead somewhere. The flyer can still be seen full size, in the lightbox
+// on that page. Workshops without a page keep the old behaviour, so the galleries of
+// the other three lines are unchanged.
 function flyerRaster(lijst) {
     return lijst.map(w => {
         const beelden = plaatjes.get(w.slug);
@@ -223,11 +299,25 @@ function flyerRaster(lijst) {
         const extra = beelden.length > 1
             ? ` <span class="flyer-aantal">${beelden.length} versies</span>`
             : '';
+        const alt = `Flyer van de ${esc(w.titel.toLowerCase())}: ${esc(w.naam)}`;
+        const beeld = `          <img src="${beelden[0].tegel}" alt="${alt}" loading="lazy">`;
+        const detail = DETAILS[w.slug];
+
+        if (detail) {
+            return `      <li class="flyer-tegel">
+        <a class="flyer-knop" href="/workshops/${detail.pad}">
+${beeld}
+        </a>
+        <h3><a href="/workshops/${detail.pad}">${esc(w.titel)}</a>${extra}</h3>
+        <p>${esc(w.omschrijving)}</p>
+        <p class="flyer-meer"><a href="/workshops/${detail.pad}">Bekijk de workshop &rarr;</a></p>
+      </li>`;
+        }
+
         return `      <li class="flyer-tegel">
         <button type="button" class="flyer-knop" data-flyers="${esc(data)}"
           data-titel="${esc(w.titel)}" aria-haspopup="dialog">
-          <img src="${beelden[0].tegel}" alt="Flyer van de ${esc(w.titel.toLowerCase())}: ${esc(w.naam)}"
-            loading="lazy">
+${beeld}
         </button>
         <h3>${esc(w.titel)}${extra}</h3>
         <p>${esc(w.omschrijving)}</p>
@@ -328,7 +418,12 @@ for (const lijn of LIJNEN) {
         <a href="/workshops/${l.slug}"><span>Workshoplijn ${l.nummer}</span>${l.titel}</a>
       </li>`).join('\n');
 
+    // Once every tile in a line leads to a page of its own, nothing on the page can be
+    // enlarged any more, and the empty dialog would only sit there unused.
+    const heeftLightbox = lijst.some(w => !DETAILS[w.slug]);
+
     schrijf(path.join(PAGINA_DIR, `${lijn.slug}.html`), pagina({
+        lightbox: heeftLightbox,
         titel: `${lijn.titel} &mdash; Artletics voor Scholen`,
         omschrijving: `Workshoplijn ${lijn.nummer} van Artletics voor scholen, `
             + `${ontEsc(lijn.plat).toLowerCase()}: `
@@ -352,6 +447,110 @@ ${anderen}
     <p>Vertel kort om welke groep het gaat, welke doelen je hebt en in welke periode je
     het wilt uitvoeren. Daarna maken we een voorstel op maat.</p>
     <a class="plain-cta" href="/contact">Vraag een voorstel aan</a>`
+    }));
+}
+
+// --- one page per poster ------------------------------------------------------------
+//
+// Only for the workshops that have an entry in tools/workshop-detail.js. The rest keep
+// a tile that enlarges the flyer, until their copy is written too.
+
+const lijnVan = new Map(LIJNEN.map(l => [l.slug, l]));
+
+// The two ways to join, the same on every workshop page. The client's own wording.
+const lesvormen = LESVORMEN.map(v => `      <li>
+        <h3>${esc(v.naam)}</h3>
+        <p class="lesvorm-slogan">${esc(v.slogan)}</p>
+        <p>${esc(v.tekst)}</p>
+        <ul class="plain-lijst">
+${v.punten.map(p => `          <li>${esc(p)}</li>`).join('\n')}
+        </ul>
+        <p class="lesvorm-prijs"><strong>${esc(v.prijs)}</strong>
+        <span>${esc(v.prijsWat)}</span></p>
+      </li>`).join('\n');
+
+for (const w of WORKSHOPS) {
+    const d = DETAILS[w.slug];
+    if (!d) continue;
+
+    const lijn = lijnVan.get(w.lijn);
+    const beelden = plaatjes.get(w.slug);
+    const data = beelden.map(b => b.groot).join('|');
+    const meer = beelden.length > 1 ? ` Er zijn ${telwoord(beelden.length)} versies.` : '';
+
+    const ontbrekend = d.iconen.filter(i => !ICONEN[i.icoon]);
+    if (ontbrekend.length) {
+        console.error(`${w.slug}: no drawing for `
+            + ontbrekend.map(i => i.icoon).join(', '));
+        process.exit(1);
+    }
+
+    const iconen = d.iconen.map(i => `      <li>
+        <span class="ws-icoon" style="--lijn: ${lijn.kleur}">${ICONEN[i.icoon]}</span>
+        <div>
+          <h3>${esc(i.label)}</h3>
+          <p>${esc(i.uitleg)}</p>
+        </div>
+      </li>`).join('\n');
+
+    // The other workshops in the same line that have a page of their own to go to.
+    const buren = WORKSHOPS
+        .filter(a => a.lijn === w.lijn && a.slug !== w.slug && DETAILS[a.slug])
+        .map(a => `      <li style="--lijn: ${lijn.kleur}">
+        <a href="/workshops/${DETAILS[a.slug].pad}"><span>${esc(a.titel)}</span>${esc(a.naam)}</a>
+      </li>`).join('\n');
+
+    const burenBlok = buren ? `
+    <h2>De andere workshops in deze lijn</h2>
+    <ul class="lijn-rij">
+${buren}
+    </ul>
+` : '';
+
+    schrijf(path.join(PAGINA_DIR, `${d.pad}.html`), pagina({
+        titel: `${esc(w.naam)} &mdash; ${esc(w.titel)}`,
+        omschrijving: `${w.naam}, de ${w.titel.toLowerCase()} van Artletics. `
+            + `${d.iconen.map(i => i.label).join(', ')}. `
+            + `Mee te doen in groepslessen of in een Small Group van maximaal drie deelnemers.`,
+        inhoud: `    <p class="plain-eyebrow"><a href="/workshops/${lijn.slug}">&#8249;
+    ${lijn.titel}</a></p>
+    <h1>${esc(w.naam)}</h1>
+    <p class="plain-lead">${esc(w.titel)} &middot; ${esc(d.kreet)}</p>
+    <hr class="plain-rule" style="--lijn: ${lijn.kleur}">
+
+    <div class="ws-top">
+      <figure class="ws-poster">
+        <button type="button" class="flyer-knop" data-flyers="${esc(data)}"
+          data-titel="${esc(w.titel)}" aria-haspopup="dialog">
+          <img src="${beelden[0].tegel}" alt="Poster van ${esc(w.naam)}, de ${esc(w.titel.toLowerCase())} van Artletics">
+        </button>
+        <figcaption>Klik op de poster om hem groot te bekijken.${meer}</figcaption>
+      </figure>
+      <div class="ws-intro">
+        <h2>${esc(d.kop)}</h2>
+        <p>${esc(d.intro)}</p>
+      </div>
+    </div>
+
+    <h2>Wat de vier iconen op de poster betekenen</h2>
+    <p>Onderaan de poster staan vier iconen. Samen vertellen ze waar deze workshop uit
+    bestaat. Dit is wat er achter zit.</p>
+    <ul class="ws-iconen">
+${iconen}
+    </ul>
+
+    <h2>Zo kun je meedoen</h2>
+    <p>Bij Artletics kun je kiezen uit twee lesvormen.</p>
+    <ul class="lesvormen">
+${lesvormen}
+    </ul>
+    <a class="plain-cta" href="/aanmelden">Direct aanmelden</a>
+${burenBlok}
+    <h2>Met een hele klas of groep?</h2>
+    <p>Deze workshop is ook los af te nemen door een school, gemeente of wijkpartner, als
+    kennismaking, lessenreeks of onderdeel van een Impactweek. Kijk bij
+    <a href="/workshops/voor-scholen">Artletics voor Scholen</a> of
+    <a href="/contact">vraag een voorstel op maat aan</a>.</p>`
     }));
 }
 

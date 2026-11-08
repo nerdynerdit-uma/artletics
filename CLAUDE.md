@@ -27,7 +27,7 @@ images in `assets/images/`. No framework, no bundler, no build step for the site
 | `node tools/measure-live.js <slug> \| --all` | Measure live text sizes and section heights into `_raw/measurements/` |
 | `node tools/convert.js <slug> \| --all` | Build the static pages from the rendered copies and measurements |
 | `node tools/apply-nav.js [--check]` | Put the current menu, the footer band and the asset stamps into every page, hand-written ones included |
-| `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the five Artletics voor Scholen pages |
+| `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the ten Artletics voor Scholen pages |
 | `node tools/plus-beelden.js ["<plan.pdf>"]` | Pull the four discipline illustrations out of the Artletics+ project plan |
 | `node tools/compare.js <slug> [mobile]` | Block-by-block position/size differences, rebuild vs live |
 | `node tools/check-page.js <page>` | Broken images and failed requests on a local page |
@@ -117,9 +117,10 @@ caption say so too. Do not present them as photographs of participants.
 
 ## Artletics voor Scholen
 
-Five generated pages: `tools/workshops.js` is the catalogue (the four workshop lines,
-and per workshop its line, heading, blurb and flyer files) and `tools/build-workshops.js`
-converts the flyers and writes them.
+Ten generated pages: `tools/workshops.js` is the catalogue (the four workshop lines,
+and per workshop its line, heading, blurb and flyer files), `tools/workshop-detail.js`
+holds the long-form copy for a single workshop, and `tools/build-workshops.js` converts
+the flyers and writes them all.
 
 `/workshops/voor-scholen` is the overview the menu points at, and holds no flyers of its
 own: four blocks, one per workshop line, each showing the first flyers of that line as a
@@ -129,6 +130,31 @@ order and the four colours (orange, purple, teal, green) come from the client's 
 catalogue, *Artletics in de Wijk 2026-2027*; the colours were read out of that PDF rather
 than guessed. Those colours appear nowhere else on the site, which is otherwise black,
 white and the red accent.
+
+### A page per poster
+
+A workshop can have a page of its own at `/workshops/<brand name>`, for instance
+`/workshops/design-it`. The five workshops of *Maken & vakmanschap* have one; the other
+ten do not yet. Whether a workshop gets one is decided by a single thing: an entry in
+`DETAILS` in `tools/workshop-detail.js`. With an entry, the poster in the gallery turns
+from a button that enlarges the flyer into a link to that page, and the gallery stops
+loading the lightbox once no tile on it needs one any more. Without an entry, nothing
+about that tile changes. Writing the copy is therefore the whole job of adding a page.
+
+The point of the page is the row of four icons along the foot of every poster: the page
+repeats them and says what each one actually means, which is what the client asked for.
+`ICONEN` in `tools/build-workshops.js` redraws them as plain line art in the colour of
+the workshop line — the posters are busy, the page is not, and the icon only has to say
+which of the four points is being explained. A workshop whose `icoon` key has no drawing
+makes the build fail rather than render an empty circle.
+
+Under that sit the two ways to take part, `LESVORMEN`: Groepslessen at &euro;450 and
+Small Groups (three participants at most) at &euro;700, both 20 lessons of 1,5 hours,
+once a fortnight. That is the client's own copy and it is the same on every workshop
+page, so it lives in one place. **The hours are not confirmed.** The client wrote
+"13.00 uur tot 210.00", which is not a time; the site owner reads it as 14.30 and is
+checking with them. `LESTIJD` at the top of `tools/workshop-detail.js` is the only line
+to change when the answer comes.
 
 Let's Talk is two tiles, Her Space and His Space, because the catalogue lists them as two
 offerings. Two workshops in that catalogue have no artwork in the flyer delivery and are
@@ -173,7 +199,7 @@ Those coordinates are the layout. Carry them over rather than guessing at spacin
 
 - The live site declares `lang="en-US"` while all content is Dutch. The replica uses
   `lang="nl"`.
-- 31 pages: 15 in the root, 7 under `galerij/`, 2 under `aanbod/` and 7 under
+- 36 pages: 15 in the root, 7 under `galerij/`, 2 under `aanbod/` and 12 under
   `workshops/`. The Eindfestival
   pages moved under the gallery (`/info` -> `/galerij/eindfestival`,
   `/fotos-voorbereiding` -> `/galerij/fotos-voorbereiding`), with redirects from the old

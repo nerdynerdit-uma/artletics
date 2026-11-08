@@ -7,7 +7,7 @@
 <meta name="description" content="Workshoplijn 1 van Artletics voor scholen, maken en vakmanschap: Design It, Urban Art, Paint Your Story, Cut It, Style It. Bekijk de flyer van elke workshop.">
 <link rel="icon" href="/assets/images/5f1b031b-favicon.webp" type="image/webp">
 <link rel="stylesheet" href="/assets/css/base.css?v=05bc7a48">
-<link rel="stylesheet" href="/assets/css/plain-pages.css?v=bf3d50d5">
+<link rel="stylesheet" href="/assets/css/plain-pages.css?v=078411dc">
 <link rel="stylesheet" href="/assets/css/overrides.css?v=ac68d2cd">
 </head>
 <body>
@@ -45,49 +45,44 @@
 
     <ul class="flyer-raster">
       <li class="flyer-tegel">
-        <button type="button" class="flyer-knop" data-flyers="/assets/images/workshops/design-1.webp"
-          data-titel="Design workshop" aria-haspopup="dialog">
-          <img src="/assets/images/workshops/design-1-tegel.webp" alt="Flyer van de design workshop: Design It"
-            loading="lazy">
-        </button>
-        <h3>Design workshop</h3>
+        <a class="flyer-knop" href="/workshops/design-it">
+          <img src="/assets/images/workshops/design-1-tegel.webp" alt="Flyer van de design workshop: Design It" loading="lazy">
+        </a>
+        <h3><a href="/workshops/design-it">Design workshop</a></h3>
         <p>Van idee naar een eigen ontwerp: kleur, vorm, logo en kleding.</p>
+        <p class="flyer-meer"><a href="/workshops/design-it">Bekijk de workshop &rarr;</a></p>
       </li>
       <li class="flyer-tegel">
-        <button type="button" class="flyer-knop" data-flyers="/assets/images/workshops/graffiti-1.webp"
-          data-titel="Graffiti workshop" aria-haspopup="dialog">
-          <img src="/assets/images/workshops/graffiti-1-tegel.webp" alt="Flyer van de graffiti workshop: Urban Art"
-            loading="lazy">
-        </button>
-        <h3>Graffiti workshop</h3>
+        <a class="flyer-knop" href="/workshops/urban-art">
+          <img src="/assets/images/workshops/graffiti-1-tegel.webp" alt="Flyer van de graffiti workshop: Urban Art" loading="lazy">
+        </a>
+        <h3><a href="/workshops/urban-art">Graffiti workshop</a></h3>
         <p>Van schets naar street art, met letters, kleur en techniek.</p>
+        <p class="flyer-meer"><a href="/workshops/urban-art">Bekijk de workshop &rarr;</a></p>
       </li>
       <li class="flyer-tegel">
-        <button type="button" class="flyer-knop" data-flyers="/assets/images/workshops/schilder-1.webp"
-          data-titel="Schilder workshop" aria-haspopup="dialog">
-          <img src="/assets/images/workshops/schilder-1-tegel.webp" alt="Flyer van de schilder workshop: Paint Your Story"
-            loading="lazy">
-        </button>
-        <h3>Schilder workshop</h3>
+        <a class="flyer-knop" href="/workshops/paint-your-story">
+          <img src="/assets/images/workshops/schilder-1-tegel.webp" alt="Flyer van de schilder workshop: Paint Your Story" loading="lazy">
+        </a>
+        <h3><a href="/workshops/paint-your-story">Schilder workshop</a></h3>
         <p>Je eigen verhaal in kleur, met verschillende schildertechnieken.</p>
+        <p class="flyer-meer"><a href="/workshops/paint-your-story">Bekijk de workshop &rarr;</a></p>
       </li>
       <li class="flyer-tegel">
-        <button type="button" class="flyer-knop" data-flyers="/assets/images/workshops/kapper-1.webp"
-          data-titel="Kapper workshop" aria-haspopup="dialog">
-          <img src="/assets/images/workshops/kapper-1-tegel.webp" alt="Flyer van de kapper workshop: Cut It"
-            loading="lazy">
-        </button>
-        <h3>Kapper workshop</h3>
+        <a class="flyer-knop" href="/workshops/cut-it">
+          <img src="/assets/images/workshops/kapper-1-tegel.webp" alt="Flyer van de kapper workshop: Cut It" loading="lazy">
+        </a>
+        <h3><a href="/workshops/cut-it">Kapper workshop</a></h3>
         <p>De wereld van de herenkapper: knippen, contouren en hygiëne.</p>
+        <p class="flyer-meer"><a href="/workshops/cut-it">Bekijk de workshop &rarr;</a></p>
       </li>
       <li class="flyer-tegel">
-        <button type="button" class="flyer-knop" data-flyers="/assets/images/workshops/hairstyling-1.webp"
-          data-titel="Hairstyling workshop" aria-haspopup="dialog">
-          <img src="/assets/images/workshops/hairstyling-1-tegel.webp" alt="Flyer van de hairstyling workshop: Style It"
-            loading="lazy">
-        </button>
-        <h3>Hairstyling workshop</h3>
+        <a class="flyer-knop" href="/workshops/style-it">
+          <img src="/assets/images/workshops/hairstyling-1-tegel.webp" alt="Flyer van de hairstyling workshop: Style It" loading="lazy">
+        </a>
+        <h3><a href="/workshops/style-it">Hairstyling workshop</a></h3>
         <p>Haar verzorgen, vlechten en stylen, met oog voor de klant.</p>
+        <p class="flyer-meer"><a href="/workshops/style-it">Bekijk de workshop &rarr;</a></p>
       </li>
     </ul>
 
@@ -111,17 +106,6 @@
   </section>
 </main>
 
-<div class="flyer-venster" id="flyerVenster" hidden role="dialog" aria-modal="true"
-  aria-label="Flyer">
-  <button type="button" class="flyer-sluit" aria-label="Sluiten">&times;</button>
-  <button type="button" class="flyer-vorige" aria-label="Vorige">&#8249;</button>
-  <figure class="flyer-groot">
-    <img id="flyerBeeld" src="" alt="">
-    <figcaption id="flyerBijschrift"></figcaption>
-  </figure>
-  <button type="button" class="flyer-volgende" aria-label="Volgende">&#8250;</button>
-</div>
-
 <footer class="site-footer">
   <div class="footer-cta">
     <p>Een deelnemer aanmelden of een workshop aanvragen?</p>
@@ -140,6 +124,5 @@
   </section>
 </footer>
 <script src="/assets/js/site.js?v=12e52fa4" defer></script>
-<script src="/assets/js/flyers.js?v=de1eaa86" defer></script>
 </body>
 </html>
