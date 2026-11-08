@@ -19,7 +19,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const ffmpeg = require('ffmpeg-static');
 const { LIJNEN, WORKSHOPS, INZETVORMEN } = require('./workshops');
-const { LESVORMEN, DETAILS } = require('./workshop-detail');
+const { FEITEN, FEITEN_NOOT, LESVORMEN, DETAILS } = require('./workshop-detail');
 const { buildNav } = require('./nav');
 
 const DEFAULT_BRON = path.join(process.env.USERPROFILE || process.env.HOME || '',
@@ -279,7 +279,29 @@ const ICONEN = {
     verzorging: svg('<rect x="3.4" y="9.2" width="6" height="11.4" rx="1.6"/>'
         + '<path d="M5 9.2V6.6h2.8v2.6"/><path d="M5.2 4.4h2.4"/>'
         + '<path d="M14.4 20.6h6.2V12l-1.3-3h-3.6l-1.3 3v8.6Z"/>'
-        + '<path d="M15.6 9V6.6h3.8V9"/>')
+        + '<path d="M15.6 9V6.6h3.8V9"/>'),
+
+    // --- the smaller icons beside the facts above the two lesson forms --------------
+    // calendar - lesdagen
+    kalender: svg('<rect x="3.4" y="5.2" width="17.2" height="15.4" rx="2"/>'
+        + '<path d="M8 3.4V7M16 3.4V7M3.4 10h17.2"/>'),
+    // clock - lestijden
+    klok: svg('<circle cx="12" cy="12" r="8.6"/><path d="M12 7.2V12l3.2 2"/>'),
+    // calendar with a tick - aantal sessies
+    kalendervink: svg('<rect x="3.4" y="5.2" width="17.2" height="15.4" rx="2"/>'
+        + '<path d="M8 3.4V7M16 3.4V7M3.4 10h17.2"/>'
+        + '<path d="M8.8 14.8l2.2 2.2 4.2-4.2"/>'),
+    // hourglass - lesduur
+    zandloper: svg('<path d="M6.5 3.4h11M6.5 20.6h11"/>'
+        + '<path d="M7.6 3.4c0 4.6 4.4 5.6 4.4 8.6 0 3-4.4 4-4.4 8.6"/>'
+        + '<path d="M16.4 3.4c0 4.6-4.4 5.6-4.4 8.6 0 3 4.4 4 4.4 8.6"/>'),
+    // stacked layers - the hours added up
+    stapel: svg('<path d="M12 3.4 3 8l9 4.6L21 8l-9-4.6Z"/><path d="M3 12.4 12 17l9-4.6"/>'
+        + '<path d="M3 16.6 12 21.2l9-4.6"/>'),
+    // two arrows round - frequentie
+    herhaal: svg('<path d="M4.1 11.2a8 8 0 0 1 13-6.1l2.5 2.2"/>'
+        + '<path d="M19.9 12.8a8 8 0 0 1-13 6.1l-2.5-2.2"/>'
+        + '<path d="M19.9 3.4v3.9H16"/><path d="M4.1 20.6v-3.9H8"/>')
 };
 
 // The flyer grid: one tile per workshop, with every version of the flyer behind it.
@@ -457,6 +479,21 @@ ${anderen}
 
 const lijnVan = new Map(LIJNEN.map(l => [l.slug, l]));
 
+// What both ways of joining have in common, as labelled blocks. Built per line so the
+// icons and the rules take that line's colour.
+function feitenBlok(kleur) {
+    const ontbreekt = FEITEN.filter(f => !ICONEN[f.icoon]);
+    if (ontbreekt.length) {
+        console.error('no drawing for ' + ontbreekt.map(f => f.icoon).join(', '));
+        process.exit(1);
+    }
+    return FEITEN.map(f => `      <li style="--lijn: ${kleur}">
+        <span class="feit-icoon">${ICONEN[f.icoon]}</span>
+        <span class="feit-label">${esc(f.label)}</span>
+        <span class="feit-waarde">${esc(f.waarde)}</span>
+      </li>`).join('\n');
+}
+
 // The two ways to join, the same on every workshop page. The client's own wording.
 const lesvormen = LESVORMEN.map(v => `      <li>
         <h3>${esc(v.naam)}</h3>
@@ -540,7 +577,14 @@ ${iconen}
     </ul>
 
     <h2>Zo kun je meedoen</h2>
-    <p>Bij Artletics kun je kiezen uit twee lesvormen.</p>
+    <p>Bij Artletics kun je kiezen uit twee lesvormen. Dit geldt voor allebei:</p>
+    <ul class="feiten">
+${feitenBlok(lijn.kleur)}
+    </ul>
+    <p class="feiten-noot" style="--lijn: ${lijn.kleur}">
+      <strong>${esc(FEITEN_NOOT.label)}</strong>
+      ${esc(FEITEN_NOOT.tekst)}
+    </p>
     <ul class="lesvormen">
 ${lesvormen}
     </ul>

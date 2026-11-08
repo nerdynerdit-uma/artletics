@@ -10,14 +10,31 @@
 // Everything below is PLAIN text, with real &, é and ’. The builder runs it through
 // esc(), so writing entities here would escape them twice.
 
-// The two ways a participant can join. The client supplied this wording; it is the
-// same on every workshop page, so it lives here once.
+// The hard facts, set out as labelled blocks the way the client asked for, after a
+// page she pointed to. They are the same for both ways of joining, so they stand above
+// the two cards instead of being listed twice.
 //
-// NOTE: the client's copy read "13.00 uur tot 210.00", which is not a time. She reads
-// it as 14.30 and is checking with the client. The moment that is confirmed or
-// corrected, this one line is the only thing to change.
-const LESTIJD = 'Maandag, woensdag en zondag van 13.00 tot 14.30 uur';
+// 13.00 to 21.00 is the window the lessons are planned in, not the length of one: a
+// lesson is 1,5 hours and which slot you get depends on age and group. That is what
+// FEITEN_NOOT says, and without it the window reads as an eight-hour lesson.
+const FEITEN = [
+    { icoon: 'kalender', label: 'Lesdagen', waarde: 'maandag, woensdag en zondag' },
+    { icoon: 'klok', label: 'Lestijden', waarde: '13.00 tot 21.00 uur' },
+    { icoon: 'kalendervink', label: 'Aantal sessies', waarde: '20' },
+    { icoon: 'zandloper', label: 'Lesduur', waarde: '1,5 uur' },
+    { icoon: 'stapel', label: 'Totaal', waarde: '30 lesuren' },
+    { icoon: 'herhaal', label: 'Frequentie', waarde: 'om de week' }
+];
 
+const FEITEN_NOOT = {
+    label: 'Lestijden op basis van leeftijd',
+    tekst: 'De exacte lestijd wordt na aanmelding bepaald, op basis van leeftijd en '
+        + 'groepsindeling.'
+};
+
+// The two ways a participant can join. The client supplied this wording; it is the
+// same on every workshop page, so it lives here once. Only what differs between the
+// two is listed here — everything they have in common is in FEITEN above.
 const LESVORMEN = [
     {
         naam: 'Groepslessen',
@@ -26,9 +43,6 @@ const LESVORMEN = [
             + 'lessen waarin creativiteit, plezier, samenwerking en persoonlijke '
             + 'ontwikkeling centraal staan.',
         punten: [
-            '20 lessen van 1,5 uur',
-            LESTIJD,
-            'Eén keer per twee weken',
             'Begeleiding door ervaren vakprofessionals',
             'Inclusief materialen'
         ],
@@ -44,9 +58,6 @@ const LESVORMEN = [
             + 'creatieve talent verder te ontwikkelen.',
         punten: [
             'Maximaal 3 deelnemers per groep',
-            '20 lessen van 1,5 uur',
-            LESTIJD,
-            'Eén keer per twee weken',
             'Intensieve, persoonlijke begeleiding',
             'Inclusief materialen'
         ],
@@ -268,4 +279,4 @@ const DETAILS = {
     }
 };
 
-module.exports = { LESTIJD, LESVORMEN, DETAILS };
+module.exports = { FEITEN, FEITEN_NOOT, LESVORMEN, DETAILS };

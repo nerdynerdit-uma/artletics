@@ -148,13 +148,19 @@ the workshop line — the posters are busy, the page is not, and the icon only h
 which of the four points is being explained. A workshop whose `icoon` key has no drawing
 makes the build fail rather than render an empty circle.
 
-Under that sit the two ways to take part, `LESVORMEN`: Groepslessen at &euro;450 and
-Small Groups (three participants at most) at &euro;700, both 20 lessons of 1,5 hours,
-once a fortnight. That is the client's own copy and it is the same on every workshop
-page, so it lives in one place. **The hours are not confirmed.** The client wrote
-"13.00 uur tot 210.00", which is not a time; the site owner reads it as 14.30 and is
-checking with them. `LESTIJD` at the top of `tools/workshop-detail.js` is the only line
-to change when the answer comes.
+Under that sit the practical details, `FEITEN`: lesson days, hours, 20 sessions of 1,5
+hours, 30 hours in all, once a fortnight. They are set as labelled blocks rather than
+a bulleted list, after a page the client pointed to (stichtingmaeh.nl). They are the
+same for both ways of taking part, so they stand above the two cards instead of being
+repeated in each. 13.00 to 21.00 is the window lessons are planned in, not the length
+of one, and `FEITEN_NOOT` says so — without that line the window reads as an eight-hour
+lesson. There is no location block: the only address the site carries is the
+foundation's own visiting address, which is not where the lessons are.
+
+`LESVORMEN` then holds only what differs between the two: Groepslessen at &euro;450 with
+professional tutors, and Small Groups at &euro;700 with three participants at most and
+one-to-one attention. The client's own copy, the same on every workshop page, so it
+lives in one place.
 
 Let's Talk is two tiles, Her Space and His Space, because the catalogue lists them as two
 offerings. Two workshops in that catalogue have no artwork in the flyer delivery and are
