@@ -555,7 +555,10 @@ function feitenBlok(kleur) {
         console.error('no drawing for ' + ontbreekt.map(f => f.icoon).join(', '));
         process.exit(1);
     }
-    return FEITEN.map(f => `      <li style="--lijn: ${kleur}">
+    // Without a colour the CSS falls back on the site's red accent, which is what the
+    // Aanbod page wants: it belongs to no single workshop line.
+    const kleuren = kleur ? ` style="--lijn: ${kleur}"` : '';
+    return FEITEN.map(f => `      <li${kleuren}>
         <span class="feit-icoon">${ICONEN[f.icoon]}</span>
         <span class="feit-label">${esc(f.label)}</span>
         <span class="feit-waarde">${esc(f.waarde)}</span>
@@ -672,6 +675,211 @@ ${burenBlok}
     <a href="/contact">vraag een voorstel op maat aan</a>.</p>`
     }));
 }
+
+// --- /aanbod, the whole offer on one page --------------------------------------------
+//
+// Aanbod used to be a folder in the menu with two pages behind it that were never
+// filled in. The client asked for one page instead, after the equivalent on
+// stichtingmaeh.nl: an overview that groups everything and hands you on to the page
+// that has the detail. It is written here rather than by hand because almost all of
+// it is already in tools/workshops.js and tools/workshop-detail.js - the lines, the
+// ways of taking part, the prices - and that should not be typed out a second time.
+
+// The four disciplines the site has always been built around. Each page opens with a
+// coloured brand tile; those are the card images here, scaled down from the originals,
+// which are up to half a megabyte each.
+const DISCIPLINES = [
+    {
+        naam: 'Creatieve Artwork', pad: '/creatieve-artwork',
+        bron: 'assets/images/5f5e2032-Untitled-design.webp',
+        wat: 'Ontwerpen, schilderen en spuiten: van een eerste schets naar iets dat af is.'
+    },
+    {
+        naam: 'Dans', pad: '/dans',
+        bron: 'assets/images/929f5739-Untitled-design-3-.webp',
+        wat: 'Ritme, choreografie en je eigen manier van bewegen vinden.'
+    },
+    {
+        naam: 'Muziek', pad: '/muziek',
+        bron: 'assets/images/3bd1f205-Untitled-design-5-.webp',
+        wat: 'Beats en teksten maken, en draaien achter echte apparatuur.'
+    },
+    {
+        naam: 'Voetbal', pad: '/voetbal',
+        bron: 'assets/images/4b12f614-Untitled-design-7-.webp',
+        wat: 'Techniek, conditie en samenspel in een groep waar je iets aan hebt.'
+    }
+];
+
+const AANBOD_DIR = 'assets/images/aanbod';
+const DISCIPLINE_BREED = 640;
+
+const disciplineBeeld = d => {
+    const uit = path.join(AANBOD_DIR, path.basename(d.bron));
+    if (!fs.existsSync(uit) || force) {
+        if (!fs.existsSync(d.bron)) {
+            console.error(`aanbod: ${d.bron} is not there`);
+            process.exit(1);
+        }
+        fs.mkdirSync(AANBOD_DIR, { recursive: true });
+        webp(d.bron, uit, DISCIPLINE_BREED, 0);
+        console.log(`  aanbod: ${path.basename(uit)} (${kb(d.bron)} -> ${kb(uit)} kB)`);
+    }
+    return '/' + uit.replace(/\\/g, '/');
+};
+
+// The three places Artletics works. The colour is the workshop line each leans on
+// most, so the page keeps the catalogue's own palette.
+const PROGRAMMAS = [
+    {
+        kop: 'Voor scholen', titel: 'Artletics voor Scholen', kleur: '#ff7900',
+        pad: '/workshops/voor-scholen', knop: 'Bekijk het workshopaanbod',
+        tekst: `${hoofdletter(telwoord(WORKSHOPS.length))} workshops in vier lijnen, voor `
+            + 'groep 7 en 8, voortgezet onderwijs, praktijkonderwijs en mbo. Los af te '
+            + 'nemen of samen te stellen tot een lessenreeks, schooltraject of Impactweek.',
+        chips: LIJNEN.map(l => l.titel)
+    },
+    {
+        kop: 'Voor gemeenten en wijkpartners', titel: 'Artletics in de Wijk',
+        kleur: '#16b8bd', pad: '/workshops/in-de-wijk', knop: 'Bekijk Artletics in de Wijk',
+        tekst: 'Hetzelfde aanbod, maar dan op een plek in de wijk: naschools, in de '
+            + 'vakantie of als Impactweek. Bedoeld om jongeren te bereiken die je via '
+            + 'school niet te pakken krijgt.',
+        chips: ['Naschools aanbod', 'Vakantieprogramma', 'Impactweek', 'Wijkroute']
+    },
+    {
+        kop: 'Voor woonzorglocaties', titel: 'Artletics Plus', kleur: '#7a27d8',
+        pad: '/workshops/artletics-plus', knop: 'Bekijk Artletics Plus',
+        tekst: 'Een programma voor jongeren op een woonzorglocatie, rond vier '
+            + 'disciplines. Opgezet samen met de begeleiding, en afgestemd op wat de '
+            + 'groep aankan.',
+        chips: ['Power Up', 'Move It', 'Create Your Sound', 'Design It']
+    }
+];
+
+const programmaBlokken = PROGRAMMAS.map(p => `      <li style="--lijn: ${p.kleur}">
+        <span class="aanbod-kop">${esc(p.kop)}</span>
+        <h3>${p.titel}</h3>
+        <p>${esc(p.tekst)}</p>
+        <ul class="aanbod-chips">
+${p.chips.map(c => `          <li>${c}</li>`).join('\n')}
+        </ul>
+        <a class="aanbod-meer" href="${p.pad}">${esc(p.knop)} &rarr;</a>
+      </li>`).join('\n');
+
+const disciplineKaarten = DISCIPLINES.map(d => `      <li>
+        <a href="${d.pad}">
+          <img src="${disciplineBeeld(d)}" alt="" loading="lazy">
+          <span class="discipline-naam">${esc(d.naam)}</span>
+          <span class="discipline-wat">${esc(d.wat)}</span>
+        </a>
+      </li>`).join('\n');
+
+const lijnRij = LIJNEN.map(l => `      <li style="--lijn: ${l.kleur}">
+        <a href="/workshops/${l.slug}"><span>Workshoplijn ${l.nummer}</span>${l.titel}</a>
+      </li>`).join('\n');
+
+// Kept from the two pages this one replaces: the only part of them that was written
+// rather than borrowed from the homepage.
+const VERWACHTEN = [
+    {
+        titel: 'Ontdekken door te doen',
+        tekst: 'Geen theorie vooraf. Deelnemers gaan meteen aan de slag en merken zelf '
+            + 'waar hun interesse en talent liggen.'
+    },
+    {
+        titel: 'Begeleiding uit de praktijk',
+        tekst: 'De workshops worden gegeven door ervaren professionals: makers, '
+            + 'trainers, dj&rsquo;s, kunstenaars en sporters.'
+    },
+    {
+        titel: 'Een podium aan het eind',
+        tekst: 'Een traject kan worden afgesloten met een presentatie, showcase of '
+            + 'gezamenlijk eindevent.'
+    }
+];
+
+const verwachten = VERWACHTEN.map(v => `      <li>
+        <h3>${v.titel}</h3>
+        <p>${v.tekst}</p>
+      </li>`).join('\n');
+
+schrijf('aanbod.html', pagina({
+    titel: 'Aanbod',
+    lightbox: false,
+    omschrijving: 'Het hele aanbod van Artletics op een rij: workshops voor scholen, '
+        + 'programma’s in de wijk, Artletics Plus op woonzorglocaties, de vier '
+        + 'disciplines, en de groepslessen en Small Groups waar je je zelf voor aanmeldt.',
+    inhoud: `    <p class="plain-eyebrow">Aanbod</p>
+    <h1>Ontdek het aanbod van Artletics</h1>
+    <p class="plain-lead">Artletics werkt op drie plekken &mdash; op school, in de wijk
+    en op woonzorglocaties &mdash; en daarnaast kun je je als deelnemer gewoon zelf
+    aanmelden voor de lessen. Alles draait om dezelfde vier disciplines: creatieve
+    artwork, dans, muziek en sport.</p>
+    <hr class="plain-rule">
+
+    <h2>De programma&rsquo;s</h2>
+    <p>Welk programma het wordt hangt af van wie het aanvraagt en waar de groep zit. De
+    workshops erachter zijn dezelfde.</p>
+    <ul class="aanbod-blokken">
+${programmaBlokken}
+    </ul>
+
+    <h2>De vier workshoplijnen</h2>
+    <p>Het workshopaanbod is verdeeld over vier lijnen. Elke lijn heeft een eigen
+    pagina met de posters en een beschrijving per workshop.</p>
+    <ul class="lijn-rij">
+${lijnRij}
+    </ul>
+
+    <h2>De disciplines</h2>
+    <p>De vier vakgebieden waar Artletics mee begon, en waar het aanbod nog steeds op
+    rust.</p>
+    <ul class="discipline-raster">
+${disciplineKaarten}
+    </ul>
+
+    <h2>Zelf meedoen</h2>
+    <p>Je hoeft niet te wachten tot je school of wijkcentrum iets organiseert: voor de
+    lessen kun je je ook zelf aanmelden. Er zijn twee lesvormen, en dit geldt voor
+    allebei:</p>
+    <ul class="feiten">
+${feitenBlok()}
+    </ul>
+    <p class="feiten-noot">
+      <strong>${esc(FEITEN_NOOT.label)}</strong>
+      ${esc(FEITEN_NOOT.tekst)}
+    </p>
+    <ul class="lesvormen">
+${lesvormen}
+    </ul>
+    <a class="plain-cta" href="/aanmelden">Direct aanmelden</a>
+
+    <h2>Vier inzetvormen</h2>
+    <p>Voor scholen, gemeenten en organisaties: hetzelfde aanbod, in de vorm die bij de
+    groep en de periode past.</p>
+    <ul class="plain-cards">
+${inzet}
+    </ul>
+
+    <h2>Wat je kunt verwachten</h2>
+    <ul class="plain-cards">
+${verwachten}
+    </ul>
+
+    <h2>Voor wie</h2>
+    <p>Artletics werkt met kinderen en jongeren vanaf groep 7 en 8 tot en met het
+    voortgezet onderwijs, praktijkonderwijs en mbo. Deelnemen kan via school, via een
+    wijklocatie, binnen een vakantieprogramma of op eigen initiatief. Jongeren hoeven
+    vooraf niet te weten waar hun talent ligt &mdash; daar is het aanbod juist voor.</p>
+    <p>Ouders en verzorgers zijn welkom bij de presentaties en eindevents. Vragen over
+    deelname, begeleiding of veiligheid kunnen altijd gesteld worden.</p>
+
+    <h2>Iets aanvragen of overleggen?</h2>
+    <p>Vertel kort om welke groep het gaat, welke doelen je hebt en in welke periode je
+    het wilt uitvoeren. Daarna maken we een voorstel op maat.</p>
+    <a class="plain-cta" href="/contact">Vraag een voorstel aan</a>`
+}));
 
 console.log('');
 geschreven.forEach(f => console.log('  ' + f.replace(/\\/g, '/')));

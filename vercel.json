@@ -19,6 +19,16 @@
       "permanent": false
     },
     {
+      "source": "/aanbod/kinderen-jongeren-ouders",
+      "destination": "/aanbod",
+      "permanent": true
+    },
+    {
+      "source": "/aanbod/scholen-gemeenten-organisaties",
+      "destination": "/aanbod",
+      "permanent": true
+    },
+    {
       "source": "/info",
       "destination": "/galerij/eindfestival",
       "permanent": true

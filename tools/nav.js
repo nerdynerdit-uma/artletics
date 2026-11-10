@@ -13,10 +13,10 @@
 // that way too. The home page is reached through the tagline in the header.
 
 const NAV_ITEMS = [
-    ['Aanbod', null, [
-        ['Kinderen, jongeren & ouders', '/aanbod/kinderen-jongeren-ouders'],
-        ['Scholen, gemeenten & organisaties', '/aanbod/scholen-gemeenten-organisaties']
-    ]],
+    // One page, not a folder: the two audience pages behind it were never filled in
+    // and the client asked for a single overview of the whole offer instead. Their
+    // old addresses redirect to it in vercel.json.
+    ['Aanbod', '/aanbod'],
     ['Over Ons', '/over-ons'],
     ['Disciplines', null, [
         ['Creatieve Artwork', '/creatieve-artwork'],

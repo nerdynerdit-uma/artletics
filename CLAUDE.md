@@ -27,7 +27,7 @@ images in `assets/images/`. No framework, no bundler, no build step for the site
 | `node tools/measure-live.js <slug> \| --all` | Measure live text sizes and section heights into `_raw/measurements/` |
 | `node tools/convert.js <slug> \| --all` | Build the static pages from the rendered copies and measurements |
 | `node tools/apply-nav.js [--check]` | Put the current menu, the footer band and the asset stamps into every page, hand-written ones included |
-| `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the ten Artletics voor Scholen pages |
+| `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the ten Artletics voor Scholen pages plus `/aanbod` |
 | `node tools/plus-beelden.js ["<plan.pdf>"]` | Pull the four discipline illustrations out of the Artletics+ project plan |
 | `node tools/compare.js <slug> [mobile]` | Block-by-block position/size differences, rebuild vs live |
 | `node tools/check-page.js <page>` | Broken images and failed requests on a local page |
@@ -69,14 +69,29 @@ original's type sizes.
 
 ## Pages written by hand
 
-`aanbod/*.html` and `workshops/*.html` have no Squarespace original behind them, so
-`convert.js` neither builds nor overwrites them. They use `assets/css/plain-pages.css`
-instead of a generated `assets/css/pages/<slug>.css` with Fluid Engine coordinates.
-The text runs the full width of the page rather than in a reading column: the client
-asked for that, so `--plain-max` is `none` and the paragraphs carry no `max-width`.
+`workshops/*.html`, `aanbod.html` and `aanmelden.html` have no Squarespace original
+behind them, so `convert.js` neither builds nor overwrites them. They use
+`assets/css/plain-pages.css` instead of a generated `assets/css/pages/<slug>.css` with
+Fluid Engine coordinates. The text runs the full width of the page rather than in a
+reading column: the client asked for that, so `--plain-max` is `none` and the
+paragraphs carry no `max-width`.
 
-The two `aanbod/` pages still carry placeholder text drawn from the homepage copy,
-marked as such on the page; the real content has to come from Artletics.
+`aanbod.html` is the whole offer on one page, at `/aanbod`, written by
+`tools/build-workshops.js`. Aanbod used to be a folder in the menu with two audience
+pages behind it (`kinderen-jongeren-ouders`, `scholen-gemeenten-organisaties`) that
+were never filled in; the client asked for one page instead, after the equivalent on
+stichtingmaeh.nl. Those two files are gone and their addresses redirect to `/aanbod`
+in `vercel.json`. The only part of them that was written rather than borrowed from the
+homepage — "Wat je kunt verwachten" and "Voor wie" — was carried across.
+
+The page is generated rather than hand-typed because nearly all of it already lives in
+`tools/workshops.js` and `tools/workshop-detail.js`: the four lines, the four ways of
+taking part, the two lesson forms and their prices. Typing those out again would mean
+two places to keep right. What is only on this page is `DISCIPLINES` (the four
+discipline tiles, scaled down from the animated WebPs the discipline pages use, 1.35 MB
+down to 168 KB in `assets/images/aanbod/`), `PROGRAMMAS` (the three places Artletics
+works) and `VERWACHTEN`. The discipline tiles are square with the wordmark across them,
+so their frame is square too — anything wider cuts the wordmark in half.
 
 `aanmelden.html` is the sign-up page the footer band points at, modelled on a page the
 client pointed to: step 1 is the role you come from (school, gemeente or wijkteam,
@@ -216,8 +231,8 @@ Those coordinates are the layout. Carry them over rather than guessing at spacin
 
 - The live site declares `lang="en-US"` while all content is Dutch. The replica uses
   `lang="nl"`.
-- 36 pages: 15 in the root, 7 under `galerij/`, 2 under `aanbod/` and 12 under
-  `workshops/`. The Eindfestival
+- 35 pages: 16 in the root, 7 under `galerij/` and 12 under `workshops/`. The
+  Eindfestival
   pages moved under the gallery (`/info` -> `/galerij/eindfestival`,
   `/fotos-voorbereiding` -> `/galerij/fotos-voorbereiding`), with redirects from the old
   addresses in `vercel.json`.
