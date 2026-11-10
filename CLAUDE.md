@@ -55,12 +55,6 @@ node tools/apply-nav.js
 each page's own `header-*` theme, and touches nothing between the header and the footer,
 so it is safe to run twice.
 
-It also takes one thing out of every page: Squarespace put an empty line in front of
-the **Klachten** link, which dropped that column one line below the FAQs column beside
-it. The client asked for the two to line up. Because the footer is copied from
-`klachten.html` into every page, the fix has to be applied to all of them here rather
-than to one file that `convert.js` would write over again.
-
 It puts one more thing on every page: the **band at the head of the footer**, with the
 Direct aanmelden button. `FOOTER_CTA` in that file is the markup. It is not a block in
 the Fluid Engine grid under it — that grid carries coordinates measured on the live site,
@@ -73,6 +67,10 @@ mobile styling uses: the tagline and six items in Orbitron need about 1150px bes
 other, and below that the header used to break onto two ragged lines. That one media
 query in `base.css` is deliberately separate from the 767px block, which carries the
 original's type sizes.
+
+An open section's label is **violet (`#7f00ff`)**, not the site's red accent: the
+client asked for that, because in the menu the red read as a warning rather than as
+"this one is open".
 
 Inside that query the submenus **fold away**. They used to open together with the menu,
 which gave a phone one list of fourteen items with nothing to tell a section from a page
@@ -101,6 +99,14 @@ layout, so every block stacked against the left edge — which is how `/aanbod`,
 into a stylesheet of their own, rather than anyone copying them by hand where a
 reconversion could leave the two disagreeing. `apply-nav.js` warns about any page that
 loads `plain-pages.css` without it.
+
+One more thing about the footer. Squarespace put an empty line in front of the
+**Klachten** link, which dropped that column one line below the FAQs column beside it;
+the client asked for the two to line up. That empty line is hidden with CSS in
+`base.css`, and only from 768px up. It must stay in the markup: on a phone the footer
+blocks sit in grid rows that deliberately overlap, and that line is the only thing
+keeping Klachten clear of the Privacy Statement above it. Taking it out of the HTML
+made the two print over each other on a phone, which is how it first went wrong.
 
 `aanbod.html` is the whole offer on one page, at `/aanbod`, written by
 `tools/build-workshops.js`. Aanbod used to be a folder in the menu with two audience

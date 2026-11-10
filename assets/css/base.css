@@ -1026,8 +1026,10 @@ a {
         transition: transform 0.2s ease;
     }
 
+    /* Violet, at the client's request, rather than the site's red accent: in the
+       menu the red read as a warning instead of as "this one is open". */
     .site-nav .nav-folder[aria-expanded="true"] > button {
-        color: var(--accent);
+        color: #7f00ff;
     }
 
     .site-nav .nav-folder[aria-expanded="true"] > button::after {
@@ -1140,4 +1142,21 @@ a {
 .footer-cta-knop:focus-visible {
     background: var(--black);
     color: var(--white);
+}
+
+/* --- the footer's Klachten column -------------------------------------------------- */
+
+/* Squarespace put an empty line in front of the Klachten link, which dropped that
+   column one line below the FAQs column beside it. The client asked for the two to
+   line up.
+
+   It is taken out with CSS rather than out of the markup, and only from the width
+   where the columns stand side by side. On a phone the footer blocks sit in grid rows
+   that deliberately overlap, and that empty line is the only thing keeping Klachten
+   clear of the Privacy Statement above it: removing it from the HTML made the two
+   print over each other. */
+@media (min-width: 768px) {
+    .fe-block-ef1cf6872b544ca2c6d3 .block-text > p:first-child > span:first-child {
+        display: none;
+    }
 }
