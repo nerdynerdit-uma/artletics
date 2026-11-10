@@ -698,6 +698,10 @@
     .fe-block-17933744fcf19f8ec43f .block-text h3 { font-size: 24.1px; line-height: 1.065; letter-spacing: -0.0400em; font-weight: 700; text-align: right; }
 }
 
+@media (max-width: 767px) {
+    .fe-block-17933744fcf19f8ec43f { grid-row: 24 / 33; }
+}
+
 @media (min-width: 768px) {
     .fe-block-e715b4588147a5bc5d8b { container-type: inline-size; }
     .fe-block-e715b4588147a5bc5d8b .block-text h1 { font-size: 23.52cqw; line-height: 1.000; letter-spacing: -0.0400em; font-weight: 700; }

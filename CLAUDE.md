@@ -268,6 +268,15 @@ Squarespace lays pages out with **Fluid Engine**: each section is a CSS grid and
 block sits at explicit grid coordinates, with separate placements for desktop and mobile.
 Those coordinates are the layout. Carry them over rather than guessing at spacing.
 
+On a phone those rows grow with whatever is in them, and blocks are free to share rows:
+an orb over a photograph is the point of the homepage collage. Text over text is not.
+Once a block's copy outgrows the rows it was given, the rows stretch and whatever starts
+inside them is printed on top of it - which is what the new homepage copy of 2026-09-21
+did to the two intro blocks, on the live site as much as here. `MOBILE_ROWS` in
+`tools/convert.js` corrects one block's rows on a phone, written after the original's
+grid maths so it wins; it touches rows only, because the columns are what holds the
+collage together.
+
 ## Facts worth knowing
 
 - The live site declares `lang="en-US"` while all content is Dutch. The replica uses

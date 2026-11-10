@@ -221,6 +221,31 @@ const CONTENT_EDITS = [
     }
 ];
 
+// Blocks whose placement on a phone had to be corrected. Fluid Engine lays a phone out
+// as a grid whose rows grow with whatever is in them, and the blocks are free to share
+// rows: an orb over a photograph is the point of the homepage collage. Text over text is
+// not, and that is what happens once a block's copy outgrows the rows it was given --
+// the rows stretch, and whatever starts inside them is printed on top. The new homepage
+// copy of 2026-09-21 did exactly that on both intro blocks, on the live site as well as
+// here. Keyed by block class, written after the original's grid maths so it wins, and
+// only the rows are touched: the columns are what keeps the collage in place.
+const MOBILE_ROWS = {
+    'fe-block-17933744fcf19f8ec43f': {
+        note: 'homepage disciplines, printed over the intro above it on a phone',
+        // was 22 / 32: it began inside the intro block above, which runs to row 24,
+        // and ends where the photograph below it starts rather than two rows into it
+        rows: '24 / 33'
+    }
+};
+
+function mobileRowCss(blockClass) {
+    const fix = MOBILE_ROWS[blockClass];
+    if (!fix) return '';
+    return `@media (max-width: 767px) {
+    .${blockClass} { grid-row: ${fix.rows}; }
+}`;
+}
+
 // Questions dropped from the FAQ page, by the number they carry on the live site.
 // The ones that stay are renumbered from 1 without gaps.
 const REMOVED_FAQS = [1];
@@ -713,6 +738,8 @@ function convertSections($, root, slug, knownSlugs, warnings, measured, state) {
             blocks.push(`      <div class="fe-block ${blockClass}">${content}</div>`);
             const typography = typographyCss(blockClass, measured);
             if (typography) cssParts.push(typography);
+            const moved = mobileRowCss(blockClass);
+            if (moved) cssParts.push(moved);
         });
 
         const gridClass = (grid.attr('class') || '').split(/\s+/).find(c => c.startsWith('fe-')) || '';
