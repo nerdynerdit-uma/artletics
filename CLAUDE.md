@@ -74,6 +74,15 @@ other, and below that the header used to break onto two ragged lines. That one m
 query in `base.css` is deliberately separate from the 767px block, which carries the
 original's type sizes.
 
+Inside that query the submenus **fold away**. They used to open together with the menu,
+which gave a phone one list of fourteen items with nothing to tell a section from a page
+inside it. Now the top level is a row each, separated by a hairline and set larger, with
+a chevron on the three that have something behind them; tapping one opens it and folds
+away whichever was open before (`site.js`), and closing the hamburger resets them all.
+The hover and focus-within rules that open a submenu on a desktop have to be undone
+explicitly there: they carry the same weight as the rule that hides them, and a tap can
+still raise `:hover` on a touch screen.
+
 ## Pages written by hand
 
 `workshops/*.html`, `aanbod.html` and `aanmelden.html` have no Squarespace original

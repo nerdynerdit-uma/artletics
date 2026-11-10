@@ -4,20 +4,33 @@
     const toggle = document.querySelector('.nav-toggle');
     const nav = document.getElementById('site-nav');
 
+    const folders = [...document.querySelectorAll('.nav-folder')];
+
+    function setFolder(folder, open) {
+        folder.setAttribute('aria-expanded', String(open));
+        const button = folder.querySelector(':scope > button');
+        if (button) button.setAttribute('aria-expanded', String(open));
+    }
+
     if (toggle && nav) {
         toggle.addEventListener('click', () => {
             const open = nav.classList.toggle('is-open');
             toggle.setAttribute('aria-expanded', String(open));
+            // Always start from the short list: on a phone the submenus are folded
+            // away, and leaving one open from last time would undo that.
+            if (!open) folders.forEach(folder => setFolder(folder, false));
         });
     }
 
-    // On touch screens the submenus open on tap instead of hover
-    document.querySelectorAll('.nav-folder > button').forEach(button => {
+    // On touch screens the submenus open on tap instead of hover. One at a time, so
+    // the menu stays short enough to take in at a glance.
+    folders.forEach(folder => {
+        const button = folder.querySelector(':scope > button');
+        if (!button) return;
         button.addEventListener('click', () => {
-            const folder = button.parentElement;
             const open = folder.getAttribute('aria-expanded') === 'true';
-            folder.setAttribute('aria-expanded', String(!open));
-            button.setAttribute('aria-expanded', String(!open));
+            folders.forEach(other => { if (other !== folder) setFolder(other, false); });
+            setFolder(folder, !open);
         });
     });
 

@@ -959,8 +959,17 @@ a {
         display: block;
     }
 
+    /* The panel is only as tall as its contents, so the page carries on right under
+       it. A bottom edge and a shadow keep the two from reading as one list. */
+    .site-nav {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45);
+    }
+
     .header-white .site-nav {
         background: var(--white);
+        border-bottom-color: rgba(0, 0, 0, 0.14);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
     }
 
     .site-nav ul {
@@ -969,20 +978,90 @@ a {
         gap: 1.1rem;
     }
 
-    /* Submenus open with the menu instead of on hover. The selector has to match the
-       desktop rule's weight (.site-nav .nav-submenu), or that one keeps them hidden. */
-    .site-nav .nav-submenu {
+    /* The top level reads as a list of sections: one row each, separated by a hairline,
+       set larger than the items inside them. Without this the main items and the
+       submenu items were the same size and ran together into one long list. */
+    .site-nav > ul {
+        gap: 0;
+        width: 100%;
+    }
+
+    .site-nav > ul > li {
+        width: 100%;
+        border-top: 1px solid currentColor;
+        border-top-color: rgba(255, 255, 255, 0.16);
+    }
+
+    .header-white .site-nav > ul > li {
+        border-top-color: rgba(0, 0, 0, 0.14);
+    }
+
+    .site-nav > ul > li:first-child {
+        border-top: 0;
+    }
+
+    .site-nav > ul > li > a,
+    .site-nav > ul > li > button {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0.95rem 0;
+        font-size: 1.15rem;
+        text-align: left;
+    }
+
+    /* A chevron on the ones that open, so it is clear which have something behind
+       them and which are a link straight to a page. */
+    .site-nav > ul > li.nav-folder > button::after {
+        content: "";
+        flex: 0 0 auto;
+        width: 0.55rem;
+        height: 0.55rem;
+        margin: -0.25rem 0.3rem 0 1rem;
+        border-right: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        transform: rotate(45deg);
+        opacity: 0.7;
+        transition: transform 0.2s ease;
+    }
+
+    .site-nav .nav-folder[aria-expanded="true"] > button {
+        color: var(--accent);
+    }
+
+    .site-nav .nav-folder[aria-expanded="true"] > button::after {
+        transform: rotate(225deg);
+        margin-top: 0.2rem;
+        opacity: 1;
+    }
+
+    /* Closed until tapped. On a phone the whole menu used to unfold at once, which
+       made one long list. Hover and focus-within must be undone explicitly: those
+       desktop rules carry the same weight as the one below, and a tap on a touch
+       screen can still raise :hover. */
+    .site-nav .nav-submenu,
+    .site-nav .nav-folder:hover .nav-submenu,
+    .site-nav .nav-folder:focus-within .nav-submenu {
+        display: none;
+    }
+
+    .site-nav .nav-folder[aria-expanded="true"] .nav-submenu {
         position: static;
         display: flex;
+        gap: 0.9rem;
         border: 0;
-        padding: 0.8rem 0 0 1rem;
+        padding: 0.2rem 0 1.1rem 1rem;
         background: transparent;
     }
 
-    /* The desktop panel keeps labels on one line; here there is no room for that, so
-       the long ones wrap instead of pushing the page sideways. */
+    /* Set apart from the row above it: smaller, slightly held back, and sitting
+       behind a line that ties them to the section they belong to. */
     .site-nav .nav-submenu a {
         white-space: normal;
+        font-size: 1rem;
+        font-weight: 500;
+        opacity: 0.85;
     }
 }
 
