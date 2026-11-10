@@ -742,17 +742,22 @@ const PROGRAMMAS = [
     {
         kop: 'Voor gemeenten en wijkpartners', titel: 'Artletics in de Wijk',
         kleur: '#16b8bd', pad: '/workshops/in-de-wijk', knop: 'Bekijk Artletics in de Wijk',
-        tekst: 'Hetzelfde aanbod, maar dan op een plek in de wijk: naschools, in de '
-            + 'vakantie of als Impactweek. Bedoeld om jongeren te bereiken die je via '
-            + 'school niet te pakken krijgt.',
+        tekst: 'Dezelfde vier workshoplijnen als op school, maar dan op een plek in de '
+            + 'wijk: naschools, in de vakantie of als Impactweek. Bedoeld om jongeren te '
+            + 'bereiken die je via school niet te pakken krijgt.',
         chips: ['Naschools aanbod', 'Vakantieprogramma', 'Impactweek', 'Wijkroute']
     },
     {
-        kop: 'Voor woonzorglocaties', titel: 'Artletics Plus', kleur: '#7a27d8',
+        // Artletics+ is the programme for older people, not for the young. Getting
+        // this wrong on an overview page is exactly the kind of thing a reader acts
+        // on, so the wording follows workshops/artletics-plus.html, which is the
+        // client's own project plan.
+        kop: 'Voor 60-plussers', titel: 'Artletics Plus', kleur: '#7a27d8',
         pad: '/workshops/artletics-plus', knop: 'Bekijk Artletics Plus',
-        tekst: 'Een programma voor jongeren op een woonzorglocatie, rond vier '
-            + 'disciplines. Opgezet samen met de begeleiding, en afgestemd op wat de '
-            + 'groep aankan.',
+        tekst: 'De oudereneditie van Artletics: zestien weken kunst, cultuur en bewegen '
+            + 'in kleine, vaste groepen. De begeleiders en de materialen komen naar de '
+            + 'woonzorglocatie toe, ook voor wie minder mobiel is of nog nooit iets '
+            + 'dergelijks heeft gedaan.',
         chips: ['Power Up', 'Move It', 'Create Your Sound', 'Design It']
     }
 ];
@@ -814,20 +819,24 @@ schrijf('aanbod.html', pagina({
     <h1>Ontdek het aanbod van Artletics</h1>
     <p class="plain-lead">Artletics werkt op drie plekken &mdash; op school, in de wijk
     en op woonzorglocaties &mdash; en daarnaast kun je je als deelnemer gewoon zelf
-    aanmelden voor de lessen. Alles draait om dezelfde vier disciplines: creatieve
-    artwork, dans, muziek en sport.</p>
+    aanmelden voor de lessen. Alle programma&rsquo;s komen voort uit dezelfde vier
+    disciplines: creatieve artwork, dans, muziek en sport. Wat er binnen een programma
+    gebeurt verschilt wel, want het is afgestemd op de leeftijd en de plek.</p>
     <hr class="plain-rule">
 
     <h2>De programma&rsquo;s</h2>
-    <p>Welk programma het wordt hangt af van wie het aanvraagt en waar de groep zit. De
-    workshops erachter zijn dezelfde.</p>
+    <p>Welk programma het wordt hangt af van wie het aanvraagt, waar de groep zit en om
+    welke leeftijd het gaat. Elk programma heeft zijn eigen workshops: de vier
+    workshoplijnen voor scholen en de wijk, en vier eigen disciplines bij Artletics
+    Plus.</p>
     <ul class="aanbod-blokken">
 ${programmaBlokken}
     </ul>
 
     <h2>De vier workshoplijnen</h2>
-    <p>Het workshopaanbod is verdeeld over vier lijnen. Elke lijn heeft een eigen
-    pagina met de posters en een beschrijving per workshop.</p>
+    <p>Het aanbod voor scholen en voor de wijk is verdeeld over vier lijnen. Elke lijn
+    heeft een eigen pagina met de posters en een beschrijving per workshop. Artletics
+    Plus heeft een eigen opzet en staat daar los van.</p>
     <ul class="lijn-rij">
 ${lijnRij}
     </ul>
@@ -868,10 +877,14 @@ ${verwachten}
     </ul>
 
     <h2>Voor wie</h2>
-    <p>Artletics werkt met kinderen en jongeren vanaf groep 7 en 8 tot en met het
-    voortgezet onderwijs, praktijkonderwijs en mbo. Deelnemen kan via school, via een
-    wijklocatie, binnen een vakantieprogramma of op eigen initiatief. Jongeren hoeven
-    vooraf niet te weten waar hun talent ligt &mdash; daar is het aanbod juist voor.</p>
+    <p>Het grootste deel van het aanbod is voor kinderen en jongeren, vanaf groep 7 en 8
+    tot en met het voortgezet onderwijs, praktijkonderwijs en mbo. Deelnemen kan via
+    school, via een wijklocatie, binnen een vakantieprogramma of op eigen initiatief.
+    Jongeren hoeven vooraf niet te weten waar hun talent ligt &mdash; daar is het aanbod
+    juist voor.</p>
+    <p><strong>Artletics Plus is er juist voor ouderen</strong>: 60-plussers op een
+    woonzorglocatie, die zestien weken lang in een kleine vaste groep aan de slag gaan.
+    Ook wie minder mobiel is of nooit eerder iets met kunst of sport deed, kan meedoen.</p>
     <p>Ouders en verzorgers zijn welkom bij de presentaties en eindevents. Vragen over
     deelname, begeleiding of veiligheid kunnen altijd gesteld worden.</p>
 
