@@ -195,6 +195,7 @@ function pagina({ titel, omschrijving, inhoud, lightbox = true }) {
 <link rel="icon" href="/assets/images/5f1b031b-favicon.webp" type="image/webp">
 <link rel="stylesheet" href="${stamp('assets/css/base.css')}">
 <link rel="stylesheet" href="${stamp('assets/css/plain-pages.css')}">
+<link rel="stylesheet" href="${stamp('assets/css/footer.css')}">
 <link rel="stylesheet" href="${stamp('assets/css/overrides.css')}">
 </head>
 <body>

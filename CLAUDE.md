@@ -27,6 +27,7 @@ images in `assets/images/`. No framework, no bundler, no build step for the site
 | `node tools/measure-live.js <slug> \| --all` | Measure live text sizes and section heights into `_raw/measurements/` |
 | `node tools/convert.js <slug> \| --all` | Build the static pages from the rendered copies and measurements |
 | `node tools/apply-nav.js [--check]` | Put the current menu, the footer band and the asset stamps into every page, hand-written ones included |
+| `node tools/build-footer-css.js [--check]` | Lift the footer's Fluid Engine layout out of a page stylesheet into `assets/css/footer.css` |
 | `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the ten Artletics voor Scholen pages plus `/aanbod` |
 | `node tools/plus-beelden.js ["<plan.pdf>"]` | Pull the four discipline illustrations out of the Artletics+ project plan |
 | `node tools/compare.js <slug> [mobile]` | Block-by-block position/size differences, rebuild vs live |
@@ -54,6 +55,12 @@ node tools/apply-nav.js
 each page's own `header-*` theme, and touches nothing between the header and the footer,
 so it is safe to run twice.
 
+It also takes one thing out of every page: Squarespace put an empty line in front of
+the **Klachten** link, which dropped that column one line below the FAQs column beside
+it. The client asked for the two to line up. Because the footer is copied from
+`klachten.html` into every page, the fix has to be applied to all of them here rather
+than to one file that `convert.js` would write over again.
+
 It puts one more thing on every page: the **band at the head of the footer**, with the
 Direct aanmelden button. `FOOTER_CTA` in that file is the markup. It is not a block in
 the Fluid Engine grid under it — that grid carries coordinates measured on the live site,
@@ -75,6 +82,16 @@ behind them, so `convert.js` neither builds nor overwrites them. They use
 Fluid Engine coordinates. The text runs the full width of the page rather than in a
 reading column: the client asked for that, so `--plain-max` is `none` and the
 paragraphs carry no `max-width`.
+
+**They must also load `assets/css/footer.css`.** The footer is a Fluid Engine section
+and its block placements live in the per-page stylesheet that `convert.js` writes, one
+copy per converted page. A page without one got the footer markup and none of its
+layout, so every block stacked against the left edge — which is how `/aanbod`,
+`/aanmelden` and all the workshop pages looked until the client spotted it.
+`tools/build-footer-css.js` lifts those rules out of `assets/css/pages/klachten.css`
+into a stylesheet of their own, rather than anyone copying them by hand where a
+reconversion could leave the two disagreeing. `apply-nav.js` warns about any page that
+loads `plain-pages.css` without it.
 
 `aanbod.html` is the whole offer on one page, at `/aanbod`, written by
 `tools/build-workshops.js`. Aanbod used to be a folder in the menu with two audience

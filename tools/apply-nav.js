@@ -38,6 +38,17 @@ function withFooterCta(html, name) {
     return zonder.replace(opening[0], `${opening[0]}\n${FOOTER_CTA}`);
 }
 
+// Squarespace put an empty line in front of the Klachten link, which dropped that
+// column one line below the FAQs column beside it. The client asked for the two to
+// line up. The footer is copied from klachten.html into every page, so the fix has to
+// be applied here, to all of them, rather than to one file that convert.js would
+// write over again.
+const KLACHTEN_SPRONG = '<span class="sqsrte-text-color--black"><br></span><a href="/klachten">';
+
+function zonderKlachtenSprong(html) {
+    return html.replace(KLACHTEN_SPRONG, '<a href="/klachten">');
+}
+
 function pages(dir = ROOT, found = []) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
         if (entry.isDirectory()) {
@@ -75,6 +86,15 @@ for (const file of pages()) {
 
     let after = before.replace(header[0], buildNav(theme));
     after = withFooterCta(after, name);
+    after = zonderKlachtenSprong(after);
+
+    // A page with no page stylesheet of its own needs assets/css/footer.css, or the
+    // footer loses its grid and every block stacks against the left edge.
+    if (after.includes('plain-pages.css') && !after.includes('footer.css')) {
+        console.log(`  !  ${name}: loads plain-pages.css but not footer.css, `
+            + `so its footer has no layout`);
+        missing++;
+    }
 
     // Re-stamp the stylesheets and the script so a changed file is not served from a
     // stale cache. Only CSS and JS, which is what convert.js stamps; images keep their
