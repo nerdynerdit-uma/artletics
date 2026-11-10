@@ -143,10 +143,22 @@ about that tile changes. Writing the copy is therefore the whole job of adding a
 
 The point of the page is the row of four icons along the foot of every poster: the page
 repeats them and says what each one actually means, which is what the client asked for.
-`ICONEN` in `tools/build-workshops.js` redraws them as plain line art in the colour of
-the workshop line — the posters are busy, the page is not, and the icon only has to say
-which of the four points is being explained. A workshop whose `icoon` key has no drawing
-makes the build fail rather than render an empty circle.
+The icons are **cut out of the artwork**, not redrawn — the client asked for exactly the
+poster's own, and a lookalike was rejected. `ICOONBAND` in `tools/build-workshops.js`
+says where the strip sits on each poster, as a fraction of the cropped flyer, measured
+off the artwork with a grid; the four boxes are then found inside that band and written
+to `assets/images/workshops/iconen/` (20 files, 88 KB). The order of `iconen` in
+`tools/workshop-detail.js` is the order they appear on the poster, left to right, and
+that is what pairs a drawing with its explanation.
+
+Two things about that band. Its sides are forgiving, but **its bottom edge is not**: on
+several posters the label begins one single row under the icon, so there is no gap to
+find and that edge is the only thing keeping the two apart. And it is measured against
+the *cropped* flyer, so changing `witteVoet()` invalidates it. Finding anything other
+than four icons stops the build rather than cutting the wrong thing quietly.
+
+There is no caption under the poster telling people it enlarges; the client asked for
+that line to go. Clicking it still opens the lightbox.
 
 Under that sit the practical details, `FEITEN`: lesson days, hours, 20 sessions of 1,5
 hours, 30 hours in all, once a fortnight. They are set as labelled blocks rather than

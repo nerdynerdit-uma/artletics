@@ -212,76 +212,14 @@ ${lightbox ? `<script src="${stamp('assets/js/flyers.js')}" defer></script>\n` :
 `;
 }
 
-// The icons along the foot of every poster, redrawn as line art so the workshop page
-// can repeat them beside the explanation. They are deliberately plain single-colour
-// strokes: the posters are busy, the page is not, and an icon here only has to say
-// which of the four points on the poster is being explained. `icoon` in
-// tools/workshop-detail.js picks one by key.
+// The small icons beside the practical details above the two lesson forms. These are
+// the site's own, not the poster's: the four icons on a poster are cut out of the
+// artwork itself (see ICOONBAND below), because the client asked for exactly those.
 const svg = inhoud => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" `
     + `stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" `
     + `aria-hidden="true" focusable="false">${inhoud}</svg>`;
 
 const ICONEN = {
-    // pen nib - logo & branding
-    logo: svg('<path d="M12 2.5 5.6 9.4l2.3 9 4.1 3.1 4.1-3.1 2.3-9L12 2.5Z"/>'
-        + '<path d="M12 14.4v7.1"/><circle cx="12" cy="11.5" r="1.8"/>'),
-    // t-shirt - kledingdesign
-    shirt: svg('<path d="M8.6 3.4 4 6l1.7 3.9 2-.9v11.6h8.6V9l2 .9L20 6l-4.6-2.6"/>'
-        + '<path d="M8.6 3.4a3.4 3.4 0 0 0 6.8 0"/>'),
-    // lightbulb - creativiteit, creatieve expressie
-    lamp: svg('<path d="M9.3 16.4a6 6 0 1 1 5.4 0"/><path d="M9.6 18.6h4.8"/>'
-        + '<path d="M10.5 21h3"/>'),
-    // three people - presenteren, samen creeren, klantgerichtheid
-    groep: svg('<circle cx="12" cy="8.4" r="2.7"/><circle cx="5.4" cy="10.2" r="2"/>'
-        + '<circle cx="18.6" cy="10.2" r="2"/>'
-        + '<path d="M7.4 18.8c0-2.7 2-4.3 4.6-4.3s4.6 1.6 4.6 4.3"/>'
-        + '<path d="M2.6 17.6c0-2 1.2-3.2 2.8-3.2"/>'
-        + '<path d="M21.4 17.6c0-2-1.2-3.2-2.8-3.2"/>'),
-    // pencil - schets & letters
-    potlood: svg('<path d="M4 20h3.6L20 7.6a2.5 2.5 0 0 0-3.6-3.6L4 16.4V20Z"/>'
-        + '<path d="M15 5.4 18.6 9"/>'),
-    // spray can - kleur & techniek
-    spuitbus: svg('<rect x="7" y="8.2" width="7" height="12.6" rx="1.6"/>'
-        + '<path d="M8.6 8.2V5.6h3.8v2.6"/>'
-        + '<path d="M17.2 5.4h.01M19.6 3.9h.01M19.6 7.6h.01M17.2 9.6h.01"/>'),
-    // palette - kleur
-    palet: svg('<path d="M12 3.3c-5 0-8.8 3.6-8.8 8.2 0 4.3 3.3 7.4 7.3 7.4 1.5 0 2.2-.8 '
-        + '2.2-1.7 0-.6-.3-1-.3-1.6 0-.8.6-1.4 1.6-1.4h1.6c3 0 5.2-2 5.2-4.9 '
-        + '0-3.4-3.5-6-8.8-6Z"/><circle cx="7.5" cy="11.2" r=".9"/>'
-        + '<circle cx="10.3" cy="7.8" r=".9"/><circle cx="14.3" cy="7.8" r=".9"/>'
-        + '<circle cx="17.1" cy="10.8" r=".9"/>'),
-    // brush - techniek
-    penseel: svg('<path d="M20.2 3.9c-.9-.9-2-.5-3.4.9l-5.5 5.5 2.5 2.5 5.5-5.5c1.4-1.4 '
-        + '1.8-2.5.9-3.4Z"/><path d="M11.3 10.3 8.1 13.5l2.5 2.5 3.2-3.2"/>'
-        + '<path d="M8.1 13.5c-1.6 0-2.6 1-2.9 2.2-.2 1-.7 1.6-1.6 2.1 1.6.9 4.4.6 '
-        + '5.5-1 .6-.9.5-2-.5-3Z"/>'),
-    // heart - zelfexpressie
-    hart: svg('<path d="M12 20.3s-7-4.4-7-9a4 4 0 0 1 7-2.6 4 4 0 0 1 7 2.6c0 4.6-7 9-7 9Z"/>'),
-    // scissors - knippen & contouren
-    schaar: svg('<circle cx="6.2" cy="17.8" r="2.6"/><circle cx="17.8" cy="17.8" r="2.6"/>'
-        + '<path d="M8 16 19 4"/><path d="M16 16 5 4"/>'),
-    // head in profile - haar & hoofdvorm
-    hoofd: svg('<path d="M17 20.6v-3.3c1.9-1.4 3-3.5 3-5.9a8 8 0 0 0-15.8-1.6c-.2 1-.6 '
-        + '1.9-1.2 2.7-.4.6 0 1.4.7 1.4H5v2.8c0 1.1.9 2 2 2h2"/>'
-        + '<path d="M7.6 7.4c1.6-1.4 4.2-1.9 6.2-1"/>'),
-    // pump bottle and a sparkle - hygiene
-    fles: svg('<rect x="7.6" y="8.6" width="7" height="12" rx="1.8"/>'
-        + '<path d="M9.6 8.6V6h3v2.6"/><path d="M12.6 3.4h2.8v2"/>'
-        + '<path d="M19.4 9.2l.5 1.3 1.3.5-1.3.5-.5 1.3-.5-1.3-1.3-.5 1.3-.5Z"/>'),
-    // bars and a rising line - ondernemerschap
-    groei: svg('<path d="M3.6 20.6h17"/><path d="M7 20.6v-4.8M12 20.6v-7.6M17 20.6v-10.4"/>'
-        + '<path d="M5.4 9.6 10 6l3 2.2 5.6-4.8"/><path d="M14.8 3.4h3.9v3.9"/>'),
-    // a braid - vlechten & stylen
-    vlecht: svg('<path d="M12 3.4v17.2"/>'
-        + '<path d="M12 4.6c-2.2 1-2.2 3 0 4s2.2 3 0 4-2.2 3 0 4"/>'
-        + '<path d="M12 4.6c2.2 1 2.2 3 0 4s-2.2 3 0 4 2.2 3 0 4"/>'),
-    // a bottle and a tube - haarverzorging
-    verzorging: svg('<rect x="3.4" y="9.2" width="6" height="11.4" rx="1.6"/>'
-        + '<path d="M5 9.2V6.6h2.8v2.6"/><path d="M5.2 4.4h2.4"/>'
-        + '<path d="M14.4 20.6h6.2V12l-1.3-3h-3.6l-1.3 3v8.6Z"/>'
-        + '<path d="M15.6 9V6.6h3.8V9"/>'),
-
-    // --- the smaller icons beside the facts above the two lesson forms --------------
     // calendar - lesdagen
     kalender: svg('<rect x="3.4" y="5.2" width="17.2" height="15.4" rx="2"/>'
         + '<path d="M8 3.4V7M16 3.4V7M3.4 10h17.2"/>'),
@@ -303,6 +241,136 @@ const ICONEN = {
         + '<path d="M19.9 12.8a8 8 0 0 1-13 6.1l-2.5-2.2"/>'
         + '<path d="M19.9 3.4v3.9H16"/><path d="M4.1 20.6v-3.9H8"/>')
 };
+
+// --- the four icons on a poster ------------------------------------------------------
+//
+// The client asked for the icons along the foot of a poster to be repeated exactly in
+// the explanation, so they are cut out of the artwork rather than redrawn. Where the
+// strip sits is measured off each poster with a grid, as a fraction of the cropped
+// flyer; the pixel values behind those fractions, in the 1000-wide space the analysis
+// works in, are in the comments.
+//
+// The sides of the band are forgiving - the exact box is found inside it - but the
+// bottom edge is not. On several posters the label begins one single row under the
+// icon, with no gap to find, and this edge is the only thing keeping the two apart.
+// Whoever changes witteVoet() changes the crop, and then these have to be measured
+// again; the build fails loudly rather than quietly cutting the wrong thing.
+const ICOON_DIR = 'assets/images/workshops/iconen';
+const ICOON_BREED = 1000;
+
+const ICOONBAND = {
+    design:      { y0: 1124 / 1310, y1: 1238 / 1310, x0: 0 },     // 1124-1238
+    graffiti:    { y0: 1116 / 1314, y1: 1232 / 1314, x0: 0 },     // 1116-1232
+    schilder:    { y0: 1065 / 1282, y1: 1167 / 1282, x0: 0.5 },   // 1065-1167, right half
+    kapper:      { y0: 1134 / 1314, y1: 1238 / 1314, x0: 0 },     // 1134-1238
+    hairstyling: { y0: 1120 / 1310, y1: 1237 / 1310, x0: 0 }      // 1120-1237
+};
+
+// Ink is anything that is not the black the strip sits on: a light stroke, or a
+// saturated colour such as the orange and purple rings.
+function isInkt(buf, i) {
+    const r = buf[i], g = buf[i + 1], b = buf[i + 2];
+    return 0.299 * r + 0.587 * g + 0.114 * b > 100
+        || Math.max(r, g, b) - Math.min(r, g, b) > 70;
+}
+
+// Runs of true, allowing a small gap inside one run.
+function runs(actief, gatMax, minLengte) {
+    const uit = [];
+    let start = -1, gat = 0;
+    for (let i = 0; i <= actief.length; i++) {
+        if (i < actief.length && actief[i]) {
+            if (start < 0) start = i;
+            gat = 0;
+        } else if (start >= 0 && (++gat > gatMax || i === actief.length)) {
+            const eind = i - gat;
+            if (eind - start + 1 >= minLengte) uit.push([start, eind]);
+            start = -1;
+            gat = 0;
+        }
+    }
+    return uit;
+}
+
+function icoonVakken(bestand, band) {
+    const buf = execFileSync(ffmpeg, ['-v', 'error', '-i', bestand,
+        '-vf', `scale=${ICOON_BREED}:-2:flags=area,format=rgb24`, '-f', 'rawvideo', '-'],
+        { maxBuffer: 1 << 28 });
+    const hoog = buf.length / (ICOON_BREED * 3);
+    const yVan = Math.round(band.y0 * hoog);
+    const yTot = Math.round(band.y1 * hoog);
+    const xVan = Math.round(band.x0 * ICOON_BREED);
+    const bandHoog = yTot - yVan;
+
+    // Columns. A hairline divider runs the whole height of the band and is not an
+    // icon, so a column inked nearly all the way down is left out.
+    const kol = new Array(ICOON_BREED).fill(0);
+    for (let y = yVan; y < yTot; y++) {
+        for (let x = xVan; x < ICOON_BREED; x++) {
+            if (isInkt(buf, (y * ICOON_BREED + x) * 3)) kol[x]++;
+        }
+    }
+    const actief = kol.map(v => v > bandHoog * 0.04 && v < bandHoog * 0.9);
+
+    return runs(actief, 10, 28)
+        .map(([x0, x1]) => ({ x0, x1, breed: x1 - x0 + 1 }))
+        .sort((a, b) => b.breed - a.breed)
+        .slice(0, 4)
+        .sort((a, b) => a.x0 - b.x0)
+        .map(v => {
+            let y0 = yTot - 1, y1 = yVan;
+            for (let y = yVan; y < yTot; y++) {
+                let n = 0;
+                for (let x = v.x0; x <= v.x1; x++) {
+                    if (isInkt(buf, (y * ICOON_BREED + x) * 3)) n++;
+                }
+                if (n > v.breed * 0.04) { if (y < y0) y0 = y; if (y > y1) y1 = y; }
+            }
+            // Two pixels of air, but never outside the band: on one poster the last
+            // line of the paragraph sits two rows above the first ring.
+            const marge = 2;
+            return {
+                x: Math.max(0, v.x0 - marge) / ICOON_BREED,
+                y: Math.max(yVan, y0 - marge) / hoog,
+                w: (Math.min(ICOON_BREED - 1, v.x1 + marge) - Math.max(0, v.x0 - marge) + 1)
+                    / ICOON_BREED,
+                h: (Math.min(yTot - 1, Math.max(y1, y0) + marge) - Math.max(yVan, y0 - marge) + 1)
+                    / hoog
+            };
+        });
+}
+
+// Writes assets/images/workshops/iconen/<slug>-<n>.webp and returns the paths.
+function snijIconen(slug, bron) {
+    const band = ICOONBAND[slug];
+    if (!band) return null;
+
+    const wil = DETAILS[slug].iconen.length;
+    const paden = [];
+    for (let i = 1; i <= wil; i++) paden.push(`/${ICOON_DIR}/${slug}-${i}.webp`);
+
+    const klaar = paden.every(p => fs.existsSync(p.slice(1)));
+    if (klaar && !force) return paden;
+
+    const vakken = icoonVakken(bron, band);
+    if (vakken.length !== wil) {
+        console.error(`${slug}: found ${vakken.length} icons on the poster, `
+            + `but tools/workshop-detail.js describes ${wil}. The band in ICOONBAND `
+            + `no longer matches the artwork.`);
+        process.exit(1);
+    }
+
+    fs.mkdirSync(ICOON_DIR, { recursive: true });
+    vakken.forEach((v, i) => {
+        execFileSync(ffmpeg, ['-y', '-loglevel', 'error', '-i', bron,
+            '-vf', `crop=iw*${v.w.toFixed(6)}:ih*${v.h.toFixed(6)}:`
+                 + `iw*${v.x.toFixed(6)}:ih*${v.y.toFixed(6)}`,
+            '-quality', '88', '-compression_level', '6',
+            path.join(ICOON_DIR, `${slug}-${i + 1}.webp`)]);
+    });
+    console.log(`  ${slug}: ${vakken.length} icons cut out of the poster`);
+    return paden;
+}
 
 // The flyer grid: one tile per workshop, with every version of the flyer behind it.
 //
@@ -513,17 +581,25 @@ for (const w of WORKSHOPS) {
     const lijn = lijnVan.get(w.lijn);
     const beelden = plaatjes.get(w.slug);
     const data = beelden.map(b => b.groot).join('|');
-    const meer = beelden.length > 1 ? ` Er zijn ${telwoord(beelden.length)} versies.` : '';
+    // No caption telling people the poster enlarges - the client asked for that line
+    // to go. A workshop with several posters still says so, because that is not
+    // otherwise visible.
+    const meer = beelden.length > 1
+        ? `\n        <figcaption>Er zijn ${telwoord(beelden.length)} versies van `
+          + `deze poster.</figcaption>`
+        : '';
 
-    const ontbrekend = d.iconen.filter(i => !ICONEN[i.icoon]);
-    if (ontbrekend.length) {
-        console.error(`${w.slug}: no drawing for `
-            + ontbrekend.map(i => i.icoon).join(', '));
+    // The icons are the poster's own, cut out of it. The label beside each one names
+    // it, so the image itself carries no alt text.
+    const icoonPaden = snijIconen(w.slug, beelden[0].groot.slice(1));
+    if (!icoonPaden) {
+        console.error(`${w.slug}: no entry in ICOONBAND, so its icons cannot be cut `
+            + `out of the poster.`);
         process.exit(1);
     }
 
-    const iconen = d.iconen.map(i => `      <li>
-        <span class="ws-icoon" style="--lijn: ${lijn.kleur}">${ICONEN[i.icoon]}</span>
+    const iconen = d.iconen.map((i, n) => `      <li>
+        <span class="ws-icoon"><img src="${icoonPaden[n]}" alt="" loading="lazy"></span>
         <div>
           <h3>${esc(i.label)}</h3>
           <p>${esc(i.uitleg)}</p>
@@ -560,8 +636,7 @@ ${buren}
         <button type="button" class="flyer-knop" data-flyers="${esc(data)}"
           data-titel="${esc(w.titel)}" aria-haspopup="dialog">
           <img src="${beelden[0].tegel}" alt="Poster van ${esc(w.naam)}, de ${esc(w.titel.toLowerCase())} van Artletics">
-        </button>
-        <figcaption>Klik op de poster om hem groot te bekijken.${meer}</figcaption>
+        </button>${meer}
       </figure>
       <div class="ws-intro">
         <h2>${esc(d.kop)}</h2>
