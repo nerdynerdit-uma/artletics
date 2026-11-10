@@ -84,8 +84,7 @@ woonzorglocatie, wijkpartner, or a young person or parent), step 2 the details. 
 five roles are the audiences the rest of the site already addresses, not the reference's
 own list. It posts to `/api/contact`, the same endpoint and the same mailbox as the
 contact form, with the role and the programme folded into the subject and the message, so
-there is one mail service to keep working rather than two. That means it answers that it
-is not connected until RESEND_API_KEY and CONTACT_FROM are set in Vercel.
+there is one mail service to keep working rather than two.
 
 `workshops/in-de-wijk.html` is the client's gemeente catalogue, *Artletics in de Wijk
 2026-2027*, pages 6 to 8: what Artletics brings to a neighbourhood, the Impactweek, and
@@ -223,9 +222,15 @@ Those coordinates are the layout. Carry them over rather than guessing at spacin
   `/fotos-voorbereiding` -> `/galerij/fotos-voorbereiding`), with redirects from the old
   addresses in `vercel.json`.
 - No shop, membership or booking system. Two forms, on Contact and on Aanmelden, and
-  both post to `api/contact.js` (Vercel function, Resend), which needs RESEND_API_KEY
-  and CONTACT_FROM set in Vercel; without them it answers that it is not connected yet
-  and sends nothing. Mail goes to info@stichtingfacts.nl.
+  both post to `api/contact.js` (Vercel function, Resend), which mails
+  info@stichtingfacts.nl. It needs RESEND_API_KEY and CONTACT_FROM in Vercel; without
+  them it answers that it is not connected and sends nothing, and it never reports a
+  success Resend did not give it. **Those variables are set and it works**: a real
+  sign-up sent through the preview on 2026-11-10 came back `200 {"ok":true}`, which is
+  Resend accepting the message. Earlier notes in this file said it was still
+  unconnected; that was out of date. Only the Preview environment was proved, though —
+  Vercel keeps Production variables separately, so a test through www.artletics.nl is
+  still owed.
 - Image blocks keep their own fit from the original: most show the whole image
   (`contain`, including the logo), some crop to fill (`cover`).
 - Images are heavy (149 MB, mostly animated GIFs). Optimise before launch.
