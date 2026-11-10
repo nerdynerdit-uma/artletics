@@ -179,10 +179,9 @@ white and the red accent.
 
 ### A page per poster
 
-A workshop can have a page of its own at `/workshops/<brand name>`, for instance
-`/workshops/design-it`. The five workshops of *Maken & vakmanschap* have one; the other
-ten do not yet. Whether a workshop gets one is decided by a single thing: an entry in
-`DETAILS` in `tools/workshop-detail.js`. With an entry, the poster in the gallery turns
+Every workshop has a page of its own at `/workshops/<brand name>`, for instance
+`/workshops/design-it`. All fifteen have one. Whether a workshop gets one is decided by
+a single thing: an entry in `DETAILS` in `tools/workshop-detail.js`. With an entry, the poster in the gallery turns
 from a button that enlarges the flyer into a link to that page, and the gallery stops
 loading the lightbox once no tile on it needs one any more. Without an entry, nothing
 about that tile changes. Writing the copy is therefore the whole job of adding a page.
@@ -193,15 +192,25 @@ The icons are **cut out of the artwork**, not redrawn — the client asked for e
 poster's own, and a lookalike was rejected. `ICOONBAND` in `tools/build-workshops.js`
 says where the strip sits on each poster, as a fraction of the cropped flyer, measured
 off the artwork with a grid; the four boxes are then found inside that band and written
-to `assets/images/workshops/iconen/` (20 files, 88 KB). The order of `iconen` in
+to `assets/images/workshops/iconen/` (60 files, 272 KB). The order of `iconen` in
 `tools/workshop-detail.js` is the order they appear on the poster, left to right, and
 that is what pairs a drawing with its explanation.
 
-Two things about that band. Its sides are forgiving, but **its bottom edge is not**: on
+Three things about that band. Its sides are forgiving, but **neither edge is**: on
 several posters the label begins one single row under the icon, so there is no gap to
-find and that edge is the only thing keeping the two apart. And it is measured against
-the *cropped* flyer, so changing `witteVoet()` invalidates it. Finding anything other
-than four icons stops the build rather than cutting the wrong thing quietly.
+find and the edge is the only thing keeping the two apart. Above the icons it is just
+as tight - on *Own Your Power* the last line of the paragraph hangs two descenders into
+the ring, so that band starts three rows below the top of the circle. On *Let's Talk -
+His Space* the labels are not on one line: the second begins before the first icon has
+ended, which is what sets that bottom edge. And it is measured against the *cropped*
+flyer, so changing `witteVoet()` invalidates it. Finding anything other than four icons
+stops the build rather than cutting the wrong thing quietly.
+
+Two posters do not follow the pattern. *Paint Your Story* keeps its icons in the right
+half, which `x0` covers. *Power Up* puts them in a purple bar at the **top** instead of
+a strip at the foot, with each label beside its icon rather than under it; looking for
+columns there returns icon and label in one block, so that entry carries its four boxes
+in `vakken` and the page says "Bovenaan de poster" instead of "Onderaan".
 
 There is no caption under the poster telling people it enlarges; the client asked for
 that line to go. Clicking it still opens the lightbox.
@@ -263,7 +272,7 @@ Those coordinates are the layout. Carry them over rather than guessing at spacin
 
 - The live site declares `lang="en-US"` while all content is Dutch. The replica uses
   `lang="nl"`.
-- 35 pages: 16 in the root, 7 under `galerij/` and 12 under `workshops/`. The
+- 45 pages: 16 in the root, 7 under `galerij/` and 22 under `workshops/`. The
   Eindfestival
   pages moved under the gallery (`/info` -> `/galerij/eindfestival`,
   `/fotos-voorbereiding` -> `/galerij/fotos-voorbereiding`), with redirects from the old

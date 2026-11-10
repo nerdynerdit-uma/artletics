@@ -260,11 +260,33 @@ const ICOON_DIR = 'assets/images/workshops/iconen';
 const ICOON_BREED = 1000;
 
 const ICOONBAND = {
+    // 1. Maken & vakmanschap
     design:      { y0: 1124 / 1310, y1: 1238 / 1310, x0: 0 },     // 1124-1238
     graffiti:    { y0: 1116 / 1314, y1: 1232 / 1314, x0: 0 },     // 1116-1232
     schilder:    { y0: 1065 / 1282, y1: 1167 / 1282, x0: 0.5 },   // 1065-1167, right half
     kapper:      { y0: 1134 / 1314, y1: 1238 / 1314, x0: 0 },     // 1134-1238
-    hairstyling: { y0: 1120 / 1310, y1: 1237 / 1310, x0: 0 }      // 1120-1237
+    hairstyling: { y0: 1120 / 1310, y1: 1237 / 1310, x0: 0 },     // 1120-1237
+    // 2. Muziek, media en performance
+    dj:          { y0: 1086 / 1266, y1: 1197 / 1266, x0: 0 },     // 1086-1197
+    muziek:      { y0: 1125 / 1310, y1: 1232 / 1310, x0: 0 },     // 1125-1232
+    'social-media': { y0: 1151 / 1314, y1: 1258 / 1314, x0: 0 },  // 1151-1258
+    dance:       { y0: 1116 / 1310, y1: 1227 / 1310, x0: 0 },     // 1116-1227
+    // 3. Sport, gezondheid en weerbaarheid
+    voetbal:     { y0: 1142 / 1314, y1: 1250 / 1314, x0: 0 },     // 1142-1250
+    // De slotzin van de alinea hangt met twee staartjes tot in de ring, dus de
+    // band begint drie rijen onder de top van de cirkel.
+    kickboks:    { y0: 1146 / 1310, y1: 1250 / 1310, x0: 0 },     // 1146-1250
+    // Power Up zet zijn vier iconen niet onderaan maar in de paarse balk bovenin,
+    // met het bijschrift ernaast in plaats van eronder. Kolommen zoeken levert daar
+    // icoon en tekst in een blok op, dus staan de vakken hier zelf genoteerd.
+    fitness:     { y0: 314 / 1322, y1: 385 / 1322, x0: 0,         // 314-385
+        vakken: [[68, 137], [278, 346], [487, 555], [696, 766]] },
+    zelfverdediging: { y0: 1276 / 1406, y1: 1338 / 1406, x0: 0 }, // 1276-1338
+    // 4. Gesprek, identiteit en sociale kracht
+    'praat-her': { y0: 1198 / 1372, y1: 1300 / 1372, x0: 0 },     // 1198-1300
+    // De bijschriften staan hier niet op één lijn: dat onder het tweede icoon
+    // begint al op 1316, nog voordat het eerste icoon is afgelopen.
+    'praat-his': { y0: 1200 / 1390, y1: 1316 / 1390, x0: 0 }      // 1200-1316
 };
 
 // Ink is anything that is not the black the strip sits on: a light stroke, or a
@@ -313,10 +335,14 @@ function icoonVakken(bestand, band) {
     }
     const actief = kol.map(v => v > bandHoog * 0.04 && v < bandHoog * 0.9);
 
-    return runs(actief, 10, 28)
-        .map(([x0, x1]) => ({ x0, x1, breed: x1 - x0 + 1 }))
-        .sort((a, b) => b.breed - a.breed)
-        .slice(0, 4)
+    const gevonden = band.vakken
+        ? band.vakken.map(([x0, x1]) => ({ x0, x1, breed: x1 - x0 + 1 }))
+        : runs(actief, 10, 28)
+            .map(([x0, x1]) => ({ x0, x1, breed: x1 - x0 + 1 }))
+            .sort((a, b) => b.breed - a.breed)
+            .slice(0, 4);
+
+    return gevonden
         .sort((a, b) => a.x0 - b.x0)
         .map(v => {
             let y0 = yTot - 1, y1 = yVan;
@@ -596,6 +622,9 @@ for (const w of WORKSHOPS) {
     // The icons are the poster's own, cut out of it. The label beside each one names
     // it, so the image itself carries no alt text.
     const icoonPaden = snijIconen(w.slug, beelden[0].groot.slice(1));
+    // Power Up zet zijn iconen in een balk bovenin het drukwerk in plaats van
+    // onderaan, dus de zin eronder moet de lezer de goede kant op sturen.
+    const waarIconen = ICOONBAND[w.slug].y0 < 0.5 ? 'Bovenaan' : 'Onderaan';
     if (!icoonPaden) {
         console.error(`${w.slug}: no entry in ICOONBAND, so its icons cannot be cut `
             + `out of the poster.`);
@@ -649,8 +678,8 @@ ${buren}
     </div>
 
     <h2>Wat de vier iconen op de poster betekenen</h2>
-    <p>Onderaan de poster staan vier iconen. Samen vertellen ze waar deze workshop uit
-    bestaat. Dit is wat er achter zit.</p>
+    <p>${waarIconen} de poster staan vier iconen. Samen vertellen ze waar deze workshop
+    uit bestaat. Dit is wat er achter zit.</p>
     <ul class="ws-iconen">
 ${iconen}
     </ul>
