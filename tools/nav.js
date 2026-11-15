@@ -24,9 +24,13 @@ const NAV_ITEMS = [
         ['Muziek', '/muziek'],
         ['Voetbal', '/voetbal']
     ]],
+    // The order and the labels come from the client's werkinstructie of 2026-11-15:
+    // the workshop overview goes first, because that is where the individual packages
+    // and their prices are, and it is no longer named after schools. Its old address
+    // redirects in vercel.json.
     ['Workshops', null, [
-        ['Artletics Plus', '/workshops/artletics-plus'],
-        ['Artletics voor Scholen', '/workshops/voor-scholen'],
+        ['Artletics voor Jeugd', '/workshops/voor-jeugd'],
+        ['Artletics+', '/workshops/artletics-plus'],
         ['Artletics in de Wijk', '/workshops/in-de-wijk']
     ]],
     ['Galerij', null, [

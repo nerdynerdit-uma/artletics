@@ -15,8 +15,13 @@
   "redirects": [
     {
       "source": "/workshops",
-      "destination": "/workshops/voor-scholen",
+      "destination": "/workshops/voor-jeugd",
       "permanent": false
+    },
+    {
+      "source": "/workshops/voor-scholen",
+      "destination": "/workshops/voor-jeugd",
+      "permanent": true
     },
     {
       "source": "/aanbod/kinderen-jongeren-ouders",

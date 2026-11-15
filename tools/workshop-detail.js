@@ -66,6 +66,31 @@ const LESVORMEN = [
     }
 ];
 
+// The two routes into a workshop, from the client's werkinstructie of 2026-11-15.
+// Someone signing up for themselves must see the packages and the prices at once,
+// without an account; a school or organisation has to be told in as many words that
+// those individual prices are not theirs. Both sentences are the client's own, to the
+// word, so they are not to be reworded here.
+const ROUTES = {
+    kop: 'Hoe wil je deelnemen?',
+    zelf: {
+        label: 'Ik wil zelf deelnemen',
+        tekst: 'Wil je zelf deelnemen? Bekijk hieronder onze programmalijnen, '
+            + 'lestijden en tarieven en kies het pakket dat bij jou past.',
+        // The shared facts sit between that sentence and the two cards, as before.
+        feitenLead: 'Dit geldt voor allebei de lesvormen:'
+    },
+    school: {
+        label: 'Ik meld aan namens een school of organisatie',
+        tekst: 'Wil je deze workshop aanbieden aan een klas, school of organisatie? '
+            + 'Wij stellen een passend programma samen op basis van jullie doelgroep, '
+            + 'groepsgrootte en wensen. De bovenstaande individuele pakketten en '
+            + 'tarieven gelden niet voor scholen en organisaties. Neem contact met ons '
+            + 'op voor de mogelijkheden.',
+        knop: 'Neem contact op'
+    }
+};
+
 // Per workshop:
 //   pad     the address, /workshops/<pad>. The brand name on the poster, not the
 //           catalogue slug, because that is what a visitor just clicked on.
@@ -619,4 +644,4 @@ const DETAILS = {
     }
 };
 
-module.exports = { FEITEN, FEITEN_NOOT, LESVORMEN, DETAILS };
+module.exports = { FEITEN, FEITEN_NOOT, LESVORMEN, ROUTES, DETAILS };

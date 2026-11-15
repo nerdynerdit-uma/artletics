@@ -1,5 +1,7 @@
 // Converts the workshop flyers for the web and writes the pages behind
-// "Artletics voor Scholen".
+// "Artletics voor Jeugd" (called "Artletics voor Scholen" until the client's
+// werkinstructie of 2026-11-15 renamed it: the same workshops, but the name no
+// longer says the offer is for schools only).
 //
 //   node tools/build-workshops.js                     use the default source folder
 //   node tools/build-workshops.js "<folder>"          flyers from somewhere else
@@ -10,7 +12,7 @@
 // files in assets/images/workshops/: a tile for the grid and a larger one for the
 // lightbox. Together they are a fraction of the originals, which stay outside the repo.
 //
-// Five pages come out of tools/workshops.js: the overview at /workshops/voor-scholen,
+// Five pages come out of tools/workshops.js: the overview at /workshops/voor-jeugd,
 // which is what the menu points at, and one gallery per workshop line behind it. Run
 // tools/apply-nav.js afterwards if the menu changed.
 
@@ -19,7 +21,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const ffmpeg = require('ffmpeg-static');
 const { LIJNEN, WORKSHOPS, INZETVORMEN } = require('./workshops');
-const { FEITEN, FEITEN_NOOT, LESVORMEN, DETAILS } = require('./workshop-detail');
+const { FEITEN, FEITEN_NOOT, LESVORMEN, ROUTES, DETAILS } = require('./workshop-detail');
 const { buildNav } = require('./nav');
 
 const DEFAULT_BRON = path.join(process.env.USERPROFILE || process.env.HOME || '',
@@ -28,7 +30,7 @@ const DEFAULT_BRON = path.join(process.env.USERPROFILE || process.env.HOME || ''
 
 const UIT_DIR = 'assets/images/workshops';
 const PAGINA_DIR = 'workshops';
-const OVERZICHT = 'workshops/voor-scholen.html';
+const OVERZICHT = 'workshops/voor-jeugd.html';
 const TEGEL_BREED = 700;   // grid tile, enough for a retina screen at display size
 const GROOT_BREED = 1100;  // lightbox; the originals are barely wider than this
 const KWALITEIT = 80;
@@ -497,16 +499,18 @@ const inzet = INZETVORMEN.map(v => `      <li>
 const lijnNamen = LIJNEN.map(l => ontEsc(l.plat).toLowerCase()).join(', ');
 
 schrijf(OVERZICHT, pagina({
-    titel: 'Artletics voor Scholen',
-    omschrijving: `Het workshopaanbod van Artletics voor scholen in vier lijnen: `
-        + `${lijnNamen}. Kies een lijn en bekijk de workshops en hun flyers.`,
+    titel: 'Artletics voor Jeugd',
+    omschrijving: `Het workshopaanbod van Artletics in vier lijnen: `
+        + `${lijnNamen}. Kies een lijn en bekijk de workshops, hun flyers en de `
+        + `tarieven.`,
     lightbox: false,
     inhoud: `    <p class="plain-eyebrow">Workshops</p>
-    <h1>Artletics voor Scholen</h1>
+    <h1>Artletics voor Jeugd</h1>
     <p class="plain-lead">${hoofdletter(telwoord(WORKSHOPS.length))} workshops in sport,
     cultuur, media en creativiteit, verdeeld over vier workshoplijnen. Los af te nemen
     of gecombineerd tot een lessenreeks, schooltraject, wijkprogramma of Impactweek.
-    Kies een lijn om de workshops en hun flyers te bekijken.</p>
+    Kies een lijn om de workshops en hun flyers te bekijken. Wil je zelf deelnemen? Bij
+    elke workshop staan de programmalijnen, lestijden en tarieven.</p>
     <hr class="plain-rule">
 
     <ul class="lijn-menu">
@@ -541,12 +545,12 @@ for (const lijn of LIJNEN) {
 
     schrijf(path.join(PAGINA_DIR, `${lijn.slug}.html`), pagina({
         lightbox: heeftLightbox,
-        titel: `${lijn.titel} &mdash; Artletics voor Scholen`,
-        omschrijving: `Workshoplijn ${lijn.nummer} van Artletics voor scholen, `
+        titel: `${lijn.titel} &mdash; Artletics voor Jeugd`,
+        omschrijving: `Workshoplijn ${lijn.nummer} van Artletics, `
             + `${ontEsc(lijn.plat).toLowerCase()}: `
             + `${lijst.map(w => ontEsc(w.naam)).join(', ')}. Bekijk de flyer van elke workshop.`,
-        inhoud: `    <p class="plain-eyebrow"><a href="/workshops/voor-scholen">&#8249;
-    Artletics voor Scholen</a></p>
+        inhoud: `    <p class="plain-eyebrow"><a href="/workshops/voor-jeugd">&#8249;
+    Artletics voor Jeugd</a></p>
     <h1>${lijn.titel}</h1>
     <p class="plain-lead">${lijn.omschrijving}</p>
     <hr class="plain-rule" style="--lijn: ${lijn.kleur}">
@@ -684,25 +688,35 @@ ${buren}
 ${iconen}
     </ul>
 
-    <h2>Zo kun je meedoen</h2>
-    <p>Bij Artletics kun je kiezen uit twee lesvormen. Dit geldt voor allebei:</p>
-    <ul class="feiten">
+    <h2>${esc(ROUTES.kop)}</h2>
+    <div class="route-keuze" style="--lijn: ${lijn.kleur}">
+      <input class="route-radio" type="radio" name="route" id="route-zelf" checked>
+      <label class="route-knop" for="route-zelf">${esc(ROUTES.zelf.label)}</label>
+      <input class="route-radio" type="radio" name="route" id="route-school">
+      <label class="route-knop" for="route-school">${esc(ROUTES.school.label)}</label>
+
+      <div class="route-paneel route-paneel-zelf">
+        <p class="route-tekst">${esc(ROUTES.zelf.tekst)}</p>
+        <p>${esc(ROUTES.zelf.feitenLead)}</p>
+        <ul class="feiten">
 ${feitenBlok(lijn.kleur)}
-    </ul>
-    <p class="feiten-noot" style="--lijn: ${lijn.kleur}">
-      <strong>${esc(FEITEN_NOOT.label)}</strong>
-      ${esc(FEITEN_NOOT.tekst)}
-    </p>
-    <ul class="lesvormen">
+        </ul>
+        <p class="feiten-noot" style="--lijn: ${lijn.kleur}">
+          <strong>${esc(FEITEN_NOOT.label)}</strong>
+          ${esc(FEITEN_NOOT.tekst)}
+        </p>
+        <ul class="lesvormen">
 ${lesvormen}
-    </ul>
-    <a class="plain-cta" href="/aanmelden">Direct aanmelden</a>
-${burenBlok}
-    <h2>Met een hele klas of groep?</h2>
-    <p>Deze workshop is ook los af te nemen door een school, gemeente of wijkpartner, als
-    kennismaking, lessenreeks of onderdeel van een Impactweek. Kijk bij
-    <a href="/workshops/voor-scholen">Artletics voor Scholen</a> of
-    <a href="/contact">vraag een voorstel op maat aan</a>.</p>`
+        </ul>
+        <a class="plain-cta" href="/aanmelden">Direct aanmelden</a>
+      </div>
+
+      <div class="route-paneel route-paneel-school">
+        <p class="route-tekst">${esc(ROUTES.school.tekst)}</p>
+        <a class="plain-cta" href="/contact">${esc(ROUTES.school.knop)}</a>
+      </div>
+    </div>
+${burenBlok}`
     }));
 }
 
@@ -762,11 +776,12 @@ const disciplineBeeld = d => {
 // most, so the page keeps the catalogue's own palette.
 const PROGRAMMAS = [
     {
-        kop: 'Voor scholen', titel: 'Artletics voor Scholen', kleur: '#ff7900',
-        pad: '/workshops/voor-scholen', knop: 'Bekijk het workshopaanbod',
+        kop: 'Voor kinderen en jongeren', titel: 'Artletics voor Jeugd', kleur: '#ff7900',
+        pad: '/workshops/voor-jeugd', knop: 'Bekijk het workshopaanbod',
         tekst: `${hoofdletter(telwoord(WORKSHOPS.length))} workshops in vier lijnen, voor `
-            + 'groep 7 en 8, voortgezet onderwijs, praktijkonderwijs en mbo. Los af te '
-            + 'nemen of samen te stellen tot een lessenreeks, schooltraject of Impactweek.',
+            + 'groep 7 en 8, voortgezet onderwijs, praktijkonderwijs en mbo. Zelf aan te '
+            + 'melden per lesvorm, of door een school af te nemen als lessenreeks, '
+            + 'schooltraject of Impactweek.',
         chips: LIJNEN.map(l => l.titel)
     },
     {

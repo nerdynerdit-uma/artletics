@@ -7,7 +7,7 @@
 <meta name="description" content="Cut It, de kapper workshop van Artletics. Knippen &amp; contouren, Haar &amp; hoofdvorm, Hygiëne, Ondernemerschap. Mee te doen in groepslessen of in een Small Group van maximaal drie deelnemers.">
 <link rel="icon" href="/assets/images/5f1b031b-favicon.webp" type="image/webp">
 <link rel="stylesheet" href="/assets/css/base.css?v=f2b4a303">
-<link rel="stylesheet" href="/assets/css/plain-pages.css?v=e9dac091">
+<link rel="stylesheet" href="/assets/css/plain-pages.css?v=e1ee3038">
 <link rel="stylesheet" href="/assets/css/footer.css?v=757b705f">
 <link rel="stylesheet" href="/assets/css/overrides.css?v=ac68d2cd">
 </head>
@@ -25,7 +25,7 @@
         <ul class="nav-submenu"><li><a href="/creatieve-artwork">Creatieve Artwork</a></li><li><a href="/dans">Dans</a></li><li><a href="/muziek">Muziek</a></li><li><a href="/voetbal">Voetbal</a></li></ul>
       </li>
       <li class="nav-folder"><button type="button" aria-expanded="false">Workshops</button>
-        <ul class="nav-submenu"><li><a href="/workshops/artletics-plus">Artletics Plus</a></li><li><a href="/workshops/voor-scholen">Artletics voor Scholen</a></li><li><a href="/workshops/in-de-wijk">Artletics in de Wijk</a></li></ul>
+        <ul class="nav-submenu"><li><a href="/workshops/voor-jeugd">Artletics voor Jeugd</a></li><li><a href="/workshops/artletics-plus">Artletics+</a></li><li><a href="/workshops/in-de-wijk">Artletics in de Wijk</a></li></ul>
       </li>
       <li class="nav-folder"><button type="button" aria-expanded="false">Galerij</button>
         <ul class="nav-submenu"><li><a href="/galerij">Galerij</a></li><li><a href="/galerij/eindfestival">Eindfestival</a></li><li><a href="/galerij/fotos-voorbereiding">Fotos Voorbereiding</a></li></ul>
@@ -89,9 +89,17 @@
       </li>
     </ul>
 
-    <h2>Zo kun je meedoen</h2>
-    <p>Bij Artletics kun je kiezen uit twee lesvormen. Dit geldt voor allebei:</p>
-    <ul class="feiten">
+    <h2>Hoe wil je deelnemen?</h2>
+    <div class="route-keuze" style="--lijn: #ff7900">
+      <input class="route-radio" type="radio" name="route" id="route-zelf" checked>
+      <label class="route-knop" for="route-zelf">Ik wil zelf deelnemen</label>
+      <input class="route-radio" type="radio" name="route" id="route-school">
+      <label class="route-knop" for="route-school">Ik meld aan namens een school of organisatie</label>
+
+      <div class="route-paneel route-paneel-zelf">
+        <p class="route-tekst">Wil je zelf deelnemen? Bekijk hieronder onze programmalijnen, lestijden en tarieven en kies het pakket dat bij jou past.</p>
+        <p>Dit geldt voor allebei de lesvormen:</p>
+        <ul class="feiten">
       <li style="--lijn: #ff7900">
         <span class="feit-icoon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3.4" y="5.2" width="17.2" height="15.4" rx="2"/><path d="M8 3.4V7M16 3.4V7M3.4 10h17.2"/></svg></span>
         <span class="feit-label">Lesdagen</span>
@@ -122,12 +130,12 @@
         <span class="feit-label">Frequentie</span>
         <span class="feit-waarde">om de week</span>
       </li>
-    </ul>
-    <p class="feiten-noot" style="--lijn: #ff7900">
-      <strong>Lestijden op basis van leeftijd</strong>
-      De exacte lestijd wordt na aanmelding bepaald, op basis van leeftijd en groepsindeling.
-    </p>
-    <ul class="lesvormen">
+        </ul>
+        <p class="feiten-noot" style="--lijn: #ff7900">
+          <strong>Lestijden op basis van leeftijd</strong>
+          De exacte lestijd wordt na aanmelding bepaald, op basis van leeftijd en groepsindeling.
+        </p>
+        <ul class="lesvormen">
       <li>
         <h3>Groepslessen</h3>
         <p class="lesvorm-slogan">Samen ontdekken en groeien!</p>
@@ -151,8 +159,15 @@
         <p class="lesvorm-prijs"><strong>€ 700,-</strong>
         <span>jaarcontributie per deelnemer</span></p>
       </li>
-    </ul>
-    <a class="plain-cta" href="/aanmelden">Direct aanmelden</a>
+        </ul>
+        <a class="plain-cta" href="/aanmelden">Direct aanmelden</a>
+      </div>
+
+      <div class="route-paneel route-paneel-school">
+        <p class="route-tekst">Wil je deze workshop aanbieden aan een klas, school of organisatie? Wij stellen een passend programma samen op basis van jullie doelgroep, groepsgrootte en wensen. De bovenstaande individuele pakketten en tarieven gelden niet voor scholen en organisaties. Neem contact met ons op voor de mogelijkheden.</p>
+        <a class="plain-cta" href="/contact">Neem contact op</a>
+      </div>
+    </div>
 
     <h2>De andere workshops in deze lijn</h2>
     <ul class="lijn-rij">
@@ -170,11 +185,6 @@
       </li>
     </ul>
 
-    <h2>Met een hele klas of groep?</h2>
-    <p>Deze workshop is ook los af te nemen door een school, gemeente of wijkpartner, als
-    kennismaking, lessenreeks of onderdeel van een Impactweek. Kijk bij
-    <a href="/workshops/voor-scholen">Artletics voor Scholen</a> of
-    <a href="/contact">vraag een voorstel op maat aan</a>.</p>
   </section>
 </main>
 

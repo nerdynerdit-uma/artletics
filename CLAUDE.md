@@ -28,7 +28,7 @@ images in `assets/images/`. No framework, no bundler, no build step for the site
 | `node tools/convert.js <slug> \| --all` | Build the static pages from the rendered copies and measurements |
 | `node tools/apply-nav.js [--check]` | Put the current menu, the footer band and the asset stamps into every page, hand-written ones included |
 | `node tools/build-footer-css.js [--check]` | Lift the footer's Fluid Engine layout out of a page stylesheet into `assets/css/footer.css` |
-| `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the ten Artletics voor Scholen pages plus `/aanbod` |
+| `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the Artletics voor Jeugd pages plus `/aanbod` |
 | `node tools/plus-beelden.js ["<plan.pdf>"]` | Pull the four discipline illustrations out of the Artletics+ project plan |
 | `node tools/compare.js <slug> [mobile]` | Block-by-block position/size differences, rebuild vs live |
 | `node tools/check-page.js <page>` | Broken images and failed requests on a local page |
@@ -139,7 +139,7 @@ what a gemeente, school or partner has taken off their hands. The catalogue's ow
 contact block is not on it — the site is the website it points at, and the footer already
 carries the address, phone and mail — so that block is the contact button instead. Pages
 1 to 5 of the same catalogue are the four workshop lines, and live under Artletics voor
-Scholen rather than here.
+Jeugd rather than here.
 
 `workshops/artletics-plus.html` is the client's own project plan (Artletics Plus
 Projectplan 2027) as a web page: every chapter except the closing contact and image
@@ -161,14 +161,21 @@ The funder is not named anywhere. Leave it that way unless the client asks other
 AI-generated, which the plan states under each one, so the page and the lightbox
 caption say so too. Do not present them as photographs of participants.
 
-## Artletics voor Scholen
+## Artletics voor Jeugd
 
 Ten generated pages: `tools/workshops.js` is the catalogue (the four workshop lines,
 and per workshop its line, heading, blurb and flyer files), `tools/workshop-detail.js`
 holds the long-form copy for a single workshop, and `tools/build-workshops.js` converts
 the flyers and writes them all.
 
-`/workshops/voor-scholen` is the overview the menu points at, and holds no flyers of its
+It was called **Artletics voor Scholen** until the client's werkinstructie of
+2026-11-15: same pages, but the name said the offer was for schools, while the whole
+point of that instruction is that an individual can sign up and see the price. The menu
+label, the page name and the address changed together, `/workshops/voor-scholen`
+redirects to the new address in `vercel.json`, and the submenu now reads Artletics voor
+Jeugd, Artletics+, Artletics in de Wijk in that order.
+
+`/workshops/voor-jeugd` is the overview the menu points at, and holds no flyers of its
 own: four blocks, one per workshop line, each showing the first flyers of that line as a
 preview strip. Behind each one is its own gallery at `/workshops/<line>`, which carries
 the flyer grid and the lightbox and links on to the other three lines. The lines, their
@@ -228,6 +235,21 @@ foundation's own visiting address, which is not where the lessons are.
 professional tutors, and Small Groups at &euro;700 with three participants at most and
 one-to-one attention. The client's own copy, the same on every workshop page, so it
 lives in one place.
+
+All of that sits inside **two routes**, which the werkinstructie of 2026-11-15 asked for
+and `ROUTES` in `tools/workshop-detail.js` holds: *Ik wil zelf deelnemen*, open from the
+start, carries the facts, the two cards and the prices, and *Ik meld aan namens een
+school of organisatie* says in the client's own words that those individual prices are
+not a school's and hands the reader to the contact page. Two radios and two panels
+switched in CSS (`.route-keuze` in `plain-pages.css`), no script: the prices have to be
+on screen without a click and without an account, because the gemeente checks that for
+the Sport- en cultuurtegoed. Both sentences are quoted from the instruction to the word
+and are not to be reworded. The routes replaced a *Met een hele klas of groep?* block at
+the foot of every workshop page, which said the same thing in weaker words.
+
+Nothing on the site may claim that paying with Sport- en cultuurtegoed is possible until
+the gemeente approves it. The client asked for that explicitly; there is no mention of
+the tegoed anywhere yet.
 
 Let's Talk is two tiles, Her Space and His Space, because the catalogue lists them as two
 offerings. Two workshops in that catalogue have no artwork in the flyer delivery and are
