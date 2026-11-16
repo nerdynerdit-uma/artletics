@@ -292,6 +292,52 @@ Two delivered flyers are deliberately left out, both the graffiti workshop print
 one school: they carry a start date and the Yulius College address, so the page would go
 stale. `NIET_GEBRUIKT` in `tools/workshops.js` says so.
 
+## Security
+
+There is **no database and no SQL anywhere**, so injection is not a category here. The
+whole attack surface is one serverless function, `api/contact.js`, and what it offers a
+stranger is not data but a way to put text in someone's mailbox. The defences are
+written for that.
+
+`vercel.json` sets the headers for every response. The **content policy is `'self'`**
+with exactly one exception, `frame-src https://player.vimeo.com`, because four pages
+embed a Vimeo video; everything else — the four scripts, the stylesheets, Orbitron, the
+images, the video — is served from the site itself, which is what makes a policy this
+tight possible. `style-src` needs `'unsafe-inline'`: 45 pages carry a `style` attribute
+holding Fluid Engine coordinates or a workshop colour, all generated, none typed by a
+visitor. `script-src` needs no exception at all, because there is no inline script and
+no `onclick` on any served page. **Keep it that way** — a single inline `<script>` in a
+generator would need a hash here or the page stops working. Alongside it: `nosniff`,
+`X-Frame-Options: DENY` with `frame-ancestors 'none'`, a referrer policy and a
+permissions policy that turns off camera, microphone and location.
+
+`api/contact.js` layers five things in front of the mail service, none of them a wall:
+
+- an **Origin check**, so a form posted from another site is refused. Forgeable with
+  curl, which is why it is first and not last;
+- a **honeypot**, `name="website"` in both forms, off screen via `.form-val` in
+  `base.css`, out of the tab order and `aria-hidden`. Filled means a robot. The answer
+  is a cheerful `{"ok":true}` with nothing sent, so the robot learns nothing;
+- a **time trap**: the form stamps when it was drawn and the server drops anything
+  completed inside three seconds. A missing stamp is allowed through, so a page already
+  in someone's cache keeps working;
+- a **rate limit**, five messages per address per ten minutes, in the instance's memory.
+  Vercel runs several instances and recycles them, so this slows a flood rather than
+  stopping it; nothing is written down and no address outlives the window;
+- **input cleaning**: every field is trimmed, capped and stripped of control characters,
+  and the one-line fields lose any newline. That last part is what header injection
+  looks like, even though the Resend call is JSON and would not carry it anyway.
+
+Malformed JSON, an array instead of an object, a body over 20 KB and a wrong
+`Content-Type` each get their own 4xx instead of an unhandled 500.
+
+Two things deliberately left alone. **HSTS** stays at Vercel's own
+`max-age=63072000` without `includeSubDomains`: artletics.nl carries mail on Microsoft
+365 and a Resend subdomain, and forcing HTTPS across every subdomain is a promise worth
+checking before making. And the **`reply_to` address is whatever the sender typed** —
+it cannot be verified, so the mail says so in its last line rather than pretending
+otherwise.
+
 ## The design
 
 Dark theme: black sections, white text, a bright red/orange accent

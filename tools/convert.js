@@ -397,6 +397,7 @@ function convertBlock($, block, warnings, slug, knownSlugs, state) {
         <label class="form-field"><span class="form-title">Je mail<span class="form-required">(vereist)</span></span><input type="email" name="email" autocomplete="email" required></label>
         <label class="form-field"><span class="form-title">Waar praten we over?<span class="form-required">(vereist)</span></span><input type="text" name="subject" required></label>
         <label class="form-field"><span class="form-title">Je bericht<span class="form-required">(vereist)</span></span><textarea name="message" rows="4" required></textarea></label>
+        <div class="form-val" aria-hidden="true"><label>Laat dit veld leeg<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
         <button type="submit" class="form-submit">Stuur Nu</button>
         <p class="form-note" id="contactNote" role="status" hidden></p>
       </form>`;

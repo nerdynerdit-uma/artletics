@@ -10,6 +10,12 @@
     const button = form.querySelector('.form-submit');
     const label = button.textContent;
 
+    // The moment the page was drawn. Nobody picks a role and fills this in under three
+    // seconds; a robot does, and api/contact.js drops those. `website` beside it is the
+    // honeypot: a field a visitor cannot see, reach or tab into, so anything in it came
+    // from something filling the form automatically.
+    const geopend = Date.now();
+
     function say(text, failed) {
         note.textContent = text;
         note.classList.toggle('is-error', !!failed);
@@ -56,7 +62,9 @@
                     lastName: d.lastName,
                     email: d.email,
                     subject: `Aanmelding ${d.programma || 'Artletics'} (${rol})`,
-                    message: regels.join('\n')
+                    message: regels.join('\n'),
+                    website: d.website || '',
+                    t: geopend
                 })
             });
             const result = await reply.json().catch(() => ({}));

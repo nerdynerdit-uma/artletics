@@ -6,6 +6,11 @@
     const form = document.getElementById('contactForm');
     if (!form) return;
 
+    // The moment the page was drawn, sent along with the message. Nobody fills a form
+    // in under three seconds; a robot does. api/contact.js quietly drops those. The
+    // honeypot field rides along by itself, because the whole form is read at once.
+    const geopend = Date.now();
+
     const note = document.getElementById('contactNote');
     const button = form.querySelector('.form-submit');
     const label = button.textContent;
@@ -28,7 +33,10 @@
             const reply = await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(Object.fromEntries(new FormData(form)))
+                body: JSON.stringify({
+                    ...Object.fromEntries(new FormData(form)),
+                    t: geopend
+                })
             });
             const result = await reply.json().catch(() => ({}));
             if (!reply.ok) throw new Error(result.error || 'Versturen is niet gelukt.');

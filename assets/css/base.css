@@ -527,6 +527,19 @@ a {
     resize: vertical;
 }
 
+/* The honeypot on both forms. It has to be in the page and fillable, because the whole
+   point is that a form-filling robot fills it while a visitor cannot: it is off the
+   screen rather than display:none, since some robots skip what is hidden outright. Out
+   of the tab order and out of the accessibility tree as well, so a keyboard or a screen
+   reader never lands on it. api/contact.js drops anything that arrives with it filled. */
+.form-val {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 .form-note {
     margin: 1rem 0 0;
     font-size: 0.9rem;

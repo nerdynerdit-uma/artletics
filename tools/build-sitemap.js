@@ -82,8 +82,11 @@ const robots = [
 let gewijzigd = 0;
 for (const [naam, inhoud] of [['sitemap.xml', sitemap], ['robots.txt', robots]]) {
     const pad = path.join(ROOT, naam);
+    // Git is set to autocrlf here, so a checkout hands these files back with Windows
+    // line endings and a plain comparison would call them changed every time.
+    const zelfde = t => t === null ? null : t.replace(/\r\n/g, '\n');
     const oud = fs.existsSync(pad) ? fs.readFileSync(pad, 'utf8') : null;
-    if (oud === inhoud) {
+    if (zelfde(oud) === zelfde(inhoud)) {
         console.log(`  ${naam} is al bij`);
         continue;
     }
