@@ -1088,6 +1088,13 @@ a.flyer-knop {
 
 /* --- the four icons along the foot of the poster ---------------------------------- */
 
+/* This sentence used to stand under a heading of its own, which the client had removed
+   on 2026-11-16. A plain paragraph's 1rem would run it straight into the poster above,
+   so it carries the gap itself, rather less than the 3.5rem the heading took. */
+.plain-page .ws-iconen-lead {
+    margin: 2.5rem 0 0;
+}
+
 .ws-iconen {
     display: grid;
     gap: 1.5rem 2.5rem;

@@ -173,7 +173,8 @@ It was called **Artletics voor Scholen** until the client's werkinstructie of
 point of that instruction is that an individual can sign up and see the price. The menu
 label, the page name and the address changed together, `/workshops/voor-scholen`
 redirects to the new address in `vercel.json`, and the submenu now reads Artletics voor
-Jeugd, Artletics+, Artletics in de Wijk in that order.
+Jeugd, Artletics +, Artletics in de Wijk in that order (the client asked for the space on
+2026-11-16).
 
 `/workshops/voor-jeugd` is the overview the menu points at, and holds no flyers of its
 own: four blocks, one per workshop line, each showing the first flyers of that line as a
@@ -220,7 +221,12 @@ columns there returns icon and label in one block, so that entry carries its fou
 in `vakken` and the page says "Bovenaan de poster" instead of "Onderaan".
 
 There is no caption under the poster telling people it enlarges; the client asked for
-that line to go. Clicking it still opens the lightbox.
+that line to go. Clicking it still opens the lightbox. The icon section has no heading
+of its own either: *Wat de vier iconen op de poster betekenen* came off on 2026-11-16,
+because the sentence under it said the same thing and the heading held the icons
+themselves a screenful lower. That sentence now opens the section and carries the gap
+itself (`.ws-iconen-lead`), which needs `.plain-page` in front of it in the selector to
+beat `.plain-page p`.
 
 Under that sit the practical details, `FEITEN`: lesson days, hours, 20 sessions of 1,5
 hours, 30 hours in all, once a fortnight. They are set as labelled blocks rather than

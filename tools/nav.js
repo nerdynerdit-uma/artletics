@@ -30,7 +30,7 @@ const NAV_ITEMS = [
     // redirects in vercel.json.
     ['Workshops', null, [
         ['Artletics voor Jeugd', '/workshops/voor-jeugd'],
-        ['Artletics+', '/workshops/artletics-plus'],
+        ['Artletics +', '/workshops/artletics-plus'],
         ['Artletics in de Wijk', '/workshops/in-de-wijk']
     ]],
     ['Galerij', null, [

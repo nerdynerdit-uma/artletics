@@ -628,6 +628,9 @@ for (const w of WORKSHOPS) {
     const icoonPaden = snijIconen(w.slug, beelden[0].groot.slice(1));
     // Power Up zet zijn iconen in een balk bovenin het drukwerk in plaats van
     // onderaan, dus de zin eronder moet de lezer de goede kant op sturen.
+    // Opens the icon section. It used to stand under a heading, "Wat de vier iconen op
+    // de poster betekenen", which the client had taken off on 2026-11-16: this sentence
+    // already says it, and the ringed heading pushed the icons themselves down the page.
     const waarIconen = ICOONBAND[w.slug].y0 < 0.5 ? 'Bovenaan' : 'Onderaan';
     if (!icoonPaden) {
         console.error(`${w.slug}: no entry in ICOONBAND, so its icons cannot be cut `
@@ -681,9 +684,8 @@ ${buren}
       </div>
     </div>
 
-    <h2>Wat de vier iconen op de poster betekenen</h2>
-    <p>${waarIconen} de poster staan vier iconen. Samen vertellen ze waar deze workshop
-    uit bestaat. Dit is wat er achter zit.</p>
+    <p class="ws-iconen-lead">${waarIconen} de poster staan vier iconen. Samen vertellen
+    ze waar deze workshop uit bestaat. Dit is wat er achter zit.</p>
     <ul class="ws-iconen">
 ${iconen}
     </ul>
