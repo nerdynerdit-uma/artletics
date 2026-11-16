@@ -30,6 +30,7 @@ images in `assets/images/`. No framework, no bundler, no build step for the site
 | `node tools/build-footer-css.js [--check]` | Lift the footer's Fluid Engine layout out of a page stylesheet into `assets/css/footer.css` |
 | `node tools/build-workshops.js ["<folder>"]` | Convert the workshop flyers to WebP and write the Artletics voor Jeugd pages plus `/aanbod` |
 | `node tools/plus-beelden.js ["<plan.pdf>"]` | Pull the four discipline illustrations out of the Artletics+ project plan |
+| `node tools/build-sitemap.js [--check]` | Write `sitemap.xml` and `robots.txt` from the pages on disk |
 | `node tools/compare.js <slug> [mobile]` | Block-by-block position/size differences, rebuild vs live |
 | `node tools/check-page.js <page>` | Broken images and failed requests on a local page |
 | `node tools/check-colours.js [slug]` | Visible background colour of every section, live vs rebuild |
@@ -39,6 +40,17 @@ images in `assets/images/`. No framework, no bundler, no build step for the site
 
 Generated pages and `assets/css/pages/` are output: change the tools or `base.css`,
 then rerun `convert.js --all`, rather than editing a page by hand.
+
+`sitemap.xml` and `robots.txt` are output too. `build-sitemap.js` walks the same pages
+`apply-nav.js` does and writes the addresses a visitor sees, so `cleanUrls` in
+`vercel.json` is what decides them: `galerij/week-2.html` becomes `/galerij/week-2` and
+`index.html` the bare domain. `lastmod` is the date of the last commit that touched the
+file, which is why the tool is worth running from a clean tree. Addresses that only
+redirect stay out of it; they live in `vercel.json` and a sitemap is for pages, not
+signposts. Run it after `convert.js` and `build-workshops.js`, and `--check` fails with
+a non-zero exit when the two files have fallen behind. A Vercel preview sends
+`X-Robots-Tag: noindex` of its own, so the one `robots.txt` serves both environments
+safely.
 
 ## The menu
 
